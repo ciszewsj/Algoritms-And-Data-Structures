@@ -19,9 +19,6 @@ public class SelectionSortTest {
     public void test_1() {
         double[] testArray = TestDatas.test_1;
         sorter.sort(testArray);
-        for (double i : testArray) {
-            System.out.println(i);
-        }
         assertTrue(Arrays.equals(testArray, TestDatas.test_1_result));
     }
 
