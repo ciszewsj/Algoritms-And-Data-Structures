@@ -66,9 +66,4 @@ public class Heap implements HeapInterface<Double> {
         heapList.set(secondIndex, heapList.get(firstIndex));
         heapList.set(firstIndex, mem);
     }
-
-    @Override
-    public String toString() {
-        return heapList.toString();
-    }
 }
