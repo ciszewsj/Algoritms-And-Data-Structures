@@ -1,69 +1,69 @@
 package pl.edu.pw.ee;
 
+import pl.edu.pw.ee.services.Sorting;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
 
 public class DataGenerator {
 
+
 	public static String path;
-	public static void main(String[] args) {
-		path = System.getProperty("user.dir") + "\\src\\main\\java\\pl\\edu\\pw\\ee\\dataFiles\\";
+
+	public static void saveFileFor(String name, String optimisticFile, String randomFile, String unoptimisticFile, Sorting sorter) {
 		try {
-			String[] types = {"optimistic", "unoptimistic", "random"};
 			int[] sizes = {2, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000};
-			for (String type : types) {
-				Map<Integer, Long> insertionSortMap = new TreeMap<>();
-				Map<Integer, Long> selectionSortMap = new TreeMap<>();
-				Map<Integer, Long> quickSortMap = new TreeMap<>();
-				Map<Integer, Long> heapSortMap = new TreeMap<>();
-				for (int size : sizes) {
+			Map<Integer, Data> timeMap = new TreeMap<>();
+			for (int size : sizes) {
 
-					double[] data = readFile(path + "data_" + type + "_" + size + ".txt");
 
-					long startTime;
-					long endTime;
+				long startTime;
+				long endTime;
 
-					QuickSort quickSort = new QuickSort();
-					startTime = System.nanoTime();
-					quickSort.sort(data);
-					endTime = System.nanoTime();
-					quickSortMap.put(size, endTime - startTime);
+				double[] optimisticData = readFile(path + "data_" + optimisticFile + "_" + size + ".txt");
+				double[] randomData = readFile(path + "data_" + randomFile + "_" + size + ".txt");
+				double[] unoptimisticData = readFile(path + "data_" + unoptimisticFile + "_" + size + ".txt");
 
-					SelectionSort selectionSort = new SelectionSort();
-					startTime = System.nanoTime();
-					selectionSort.sort(data);
-					endTime = System.nanoTime();
-					selectionSortMap.put(size, endTime - startTime);
+				startTime = System.nanoTime();
+				sorter.sort(optimisticData);
+				endTime = System.nanoTime();
+				long optimisticTime = endTime - startTime;
 
-					InsertionSort insertionSort = new InsertionSort();
-					startTime = System.nanoTime();
-					insertionSort.sort(data);
-					endTime = System.nanoTime();
-					insertionSortMap.put(size, endTime - startTime);
+				startTime = System.nanoTime();
+				sorter.sort(randomData);
+				endTime = System.nanoTime();
+				long randomTime = endTime - startTime;
 
-					HeapSort heapSort = new HeapSort();
-					startTime = System.nanoTime();
-					heapSort.sort(data);
-					endTime = System.nanoTime();
-					heapSortMap.put(size, endTime - startTime);
+				startTime = System.nanoTime();
+				sorter.sort(unoptimisticData);
+				endTime = System.nanoTime();
+				long unoptimisticTime = endTime - startTime;
 
-				}
-				saveFile(path + "results//insertion_sort_" + type + ".txt", insertionSortMap);
-				saveFile(path + "results//selection_sort_" + type + ".txt", selectionSortMap);
-				saveFile(path + "results//quick_sort_" + type + ".txt", quickSortMap);
-				saveFile(path + "results//heap_sort_" + type + ".txt", heapSortMap);
+				Data data = new Data(optimisticTime, randomTime, unoptimisticTime);
+
+				timeMap.put(size, data);
 			}
+
+			saveFile(name, timeMap);
 		} catch (FileNotFoundException e) {
 			System.out.println("Could not read file");
 		}
+	}
+
+	public static void main(String[] args) {
+		path = System.getProperty("user.dir") + "\\src\\main\\java\\pl\\edu\\pw\\ee\\dataFiles\\";
+		saveFileFor("insertion_sort", "sorted", "random", "reversed_sorted", new InsertionSort());
+		saveFileFor("selection_sort", "sorted", "random", "reversed_sorted", new SelectionSort());
+		saveFileFor("quick_sort", "optimistic_quick_sort", "random", "sorted", new QuickSort());
+		saveFileFor("heap_sort", "reversed_sorted", "random", "sorted", new HeapSort());
+
 	}
 
 	public static double[] readFile(String fileName) throws FileNotFoundException {
 		Scanner sc = new Scanner(new File(fileName));
 		sc.useLocale(Locale.US);
 		List<Double> listOfNums = new ArrayList<>();
-
 		while (sc.hasNextDouble()) {
 			listOfNums.add(sc.nextDouble());
 		}
@@ -75,10 +75,10 @@ public class DataGenerator {
 		return numArray;
 	}
 
-	public static void saveFile(String fileName, Map<Integer, Long> map) {
+	public static void saveFile(String fileName, Map<Integer, Data> map) {
 		PrintWriter writer = null;
 		try {
-			writer = new PrintWriter(fileName, "UTF-8");
+			writer = new PrintWriter(path + "results\\results_" + fileName + ".txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
