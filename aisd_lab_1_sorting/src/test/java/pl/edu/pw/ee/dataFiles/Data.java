@@ -1,4 +1,4 @@
-package pl.edu.pw.ee;
+package pl.edu.pw.ee.dataFiles;
 
 public class Data {
 	private Long optimistic;

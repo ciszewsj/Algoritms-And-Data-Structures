@@ -1,9 +1,9 @@
 package pl.edu.pw.ee;
 
+import pl.edu.pw.ee.dataFiles.Data;
 import pl.edu.pw.ee.services.Sorting;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.*;
 
 public class DataGenerator {
