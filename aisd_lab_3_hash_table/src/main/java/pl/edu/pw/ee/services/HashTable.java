@@ -1,9 +1,9 @@
 package pl.edu.pw.ee.services;
 
-public interface HashTable {
+public interface HashTable<T> {
 
-    void add(Object value);
+    void add(T value);
 
-    Object get(Object value);
+    T get(T value);
 
 }
