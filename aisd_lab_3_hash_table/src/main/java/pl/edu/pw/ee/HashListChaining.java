@@ -1,77 +1,106 @@
 package pl.edu.pw.ee;
 
-import java.lang.ProcessBuilder.Redirect.Type;
-
 import pl.edu.pw.ee.services.HashTable;
 
-public class HashListChaining<T> implements HashTable<T> {
+public class HashListChaining<T extends Comparable<T>> implements HashTable<T> {
 
-    private final Elem<T> nil = null;
-    private Elem<T>[] hashElems;
-    private int nElem;
+	private final Elem<T>[] hashElems;
+	private int nElem;
 
-    private class Elem<S> {
-        private S value;
-        private Elem<S> next;
+	private class Elem<S> {
+		private final S value;
+		private Elem<S> next;
 
-        Elem(S value, Elem<S> nextElem) {
-            this.value = value;
-            this.next = nextElem;
-        }
-    }
+		Elem(S value, Elem<S> nextElem) {
+			this.value = value;
+			this.next = nextElem;
+		}
+	}
 
-    public HashListChaining(int size) {
-        hashElems = (Elem<T>[]) java.lang.reflect.Array.newInstance(T, size);
-        initializeHash();
-    }
+	public HashListChaining(int size) {
+		hashElems = new Elem[size];
+		initializeHash();
+	}
 
-    @Override
-    public void add(T value) {
-        int hashCode = value.hashCode();
-        int hashId = countHashId(hashCode);
+	@Override
+	public void add(T value) {
+		int hashCode = value.hashCode();
+		int hashId = countHashId(hashCode);
 
-        Elem<T> oldElem = hashElems[hashId];
-        while (oldElem != nil && !oldElem.equals(value)) {
-            oldElem = oldElem.next;
-        }
-        if (oldElem != nil) {
-            oldElem.value = value;
-        } else {
-            hashElems[hashId] = new Elem<T>(value, hashElems[hashId]);
-            nElem++;
-        }
-    }
+		Elem<T> oldElem = hashElems[hashId];
 
-    @Override
-    public T get(T value) {
-        int hashCode = value.hashCode();
-        int hashId = countHashId(hashCode);
+		if (oldElem != null) {
+			while (oldElem.next != null && !oldElem.value.equals(value)) {
+				oldElem = oldElem.next;
+			}
+			if (!oldElem.value.equals(value)) {
+				oldElem.next = new Elem<>(value, null);
+			}
+		} else {
+			hashElems[hashId] = new Elem<T>(value, null);
+			nElem++;
+		}
+	}
 
-        Elem<T> elem = hashElems[hashId];
+	@Override
+	public T get(T value) {
+		int hashCode = value.hashCode();
+		int hashId = countHashId(hashCode);
 
-        while (elem != nil && !elem.value.equals(value)) {
-            elem = elem.next;
-        }
+		Elem<T> elem = hashElems[hashId];
 
-        return elem != nil ? elem.value : nil.value;
-    }
+		while (elem != null && !elem.value.equals(value)) {
+			elem = elem.next;
+		}
 
-    public double countLoadFactor() {
-        double size = hashElems.length;
-        return nElem / size;
-    }
+		return elem != null ? elem.value : null;
+	}
 
-    private void initializeHash() {
-        int n = hashElems.length;
+	@Override
+	public void delete(T value) {
+		int hashCode = value.hashCode();
+		int hashId = countHashId(hashCode);
+		Elem<T> elem = hashElems[hashId];
+		Elem<T> previouselem = null;
+		while (elem != null && !elem.value.equals(value)) {
+			previouselem = elem;
+			elem = elem.next;
+		}
 
-        for (int i = 0; i < n; i++) {
-            hashElems[i] = nil;
-        }
-    }
+		if (elem != null && elem.value.equals(value)) {
+			if (previouselem != null) {
+				if (elem.next != null) {
+					previouselem.next = elem.next;
+				} else {
+					previouselem.next = null;
+				}
+			} else {
+				if (elem.next != null) {
+					hashElems[hashId] = elem.next;
+				} else {
+					hashElems[hashId] = null;
+					nElem--;
+				}
+			}
+		}
+	}
 
-    private int countHashId(int hashCode) {
-        int n = hashElems.length;
-        return Math.abs(hashCode) % n;
-    }
+	public double countLoadFactor() {
+		double size = hashElems.length;
+		return nElem / size;
+	}
+
+	private void initializeHash() {
+		int n = hashElems.length;
+
+		for (int i = 0; i < n; i++) {
+			hashElems[i] = null;
+		}
+	}
+
+	private int countHashId(int hashCode) {
+		int n = hashElems.length;
+		return Math.abs(hashCode) % n;
+	}
 
 }
