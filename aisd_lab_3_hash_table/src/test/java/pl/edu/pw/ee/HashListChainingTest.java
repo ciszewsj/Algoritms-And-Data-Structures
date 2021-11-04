@@ -94,6 +94,20 @@ public class HashListChainingTest {
 		}
 	}
 
+	@Test(expected = IllegalStateException.class)
+	public void delete_test_not_element_in() {
+		hashListChaining = new HashListChaining<String>(1);
+		for (String el : TestDatas.data2) {
+			assertNull(hashListChaining.get(el));
+			hashListChaining.add(el);
+
+			assertEquals(el, hashListChaining.get(el));
+		}
+		hashListChaining.delete(TestDatas.notInData2);
+
+	}
+
+
 	@Test
 	public void countHashId_test_1() {
 		hashListChaining = new HashListChaining<String>(1);

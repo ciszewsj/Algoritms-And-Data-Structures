@@ -98,6 +98,8 @@ public class HashListChaining<T extends Comparable<T>> implements HashTable<T> {
 					nElem--;
 				}
 			}
+		} else {
+			throw new IllegalStateException("Element not found");
 		}
 	}
 
