@@ -228,13 +228,14 @@ public class HashListChainingTest {
 	@Test
 	public void count_minus_hashid_problem_test() {
 		HashListChaining<String> hashListChaining = new HashListChaining<String>(1000);
-		assertTrue(hashListChaining.countHashIdHelp(minusHashIdWord) >= 0);
-	}
+		assertTrue(hashListChaining.countHashId(minusHashIdWord.hashCode()) >= 0);
+		assertTrue(hashListChaining.countHashId(Integer.MIN_VALUE) >= 0);
+}
 
 	@Test
 	public void count_blank_hashid_problem_test() {
 		HashListChaining<String> hashListChaining = new HashListChaining<String>(1000);
-		assertTrue(hashListChaining.countHashIdHelp(blankHashIdWord) >= 0);
+		assertTrue(hashListChaining.countHashId(blankHashIdWord.hashCode()) >= 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

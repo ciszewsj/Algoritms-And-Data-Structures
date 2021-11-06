@@ -118,14 +118,11 @@ public class HashListChaining<T extends Comparable<T>> implements HashTable<T> {
 		}
 	}
 
-	private int countHashId(int hashCode) {
+	public int countHashId(int hashCode) {
 		int n = hashElems.length;
-		return Math.abs(hashCode % n);
+		if (hashCode < 0) {
+			return -1 * (hashCode % n);
+		}
+		return hashCode % n;
 	}
-
-	public int countHashIdHelp(T ob) {
-
-		return countHashId(ob.hashCode());
-	}
-
 }
