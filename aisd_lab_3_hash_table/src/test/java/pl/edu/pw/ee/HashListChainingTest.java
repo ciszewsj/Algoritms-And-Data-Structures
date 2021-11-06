@@ -5,10 +5,12 @@ import pl.edu.pw.ee.data.TestDatas;
 import pl.edu.pw.ee.services.HashTable;
 
 import static org.junit.Assert.*;
+import static pl.edu.pw.ee.data.TestDatas.blankHashIdWord;
+import static pl.edu.pw.ee.data.TestDatas.minusHashIdWord;
 
 public class HashListChainingTest {
 
-	HashListChaining<String> hashListChaining;
+	HashTable<String> hashListChaining;
 
 	@Test
 	public void input_test_1() {
@@ -110,7 +112,7 @@ public class HashListChainingTest {
 
 	@Test
 	public void countHashId_test_1() {
-		hashListChaining = new HashListChaining<String>(1);
+		HashListChaining<String> hashListChaining = new HashListChaining<String>(1);
 
 		assertEquals(0, hashListChaining.countLoadFactor(), 0.0);
 
@@ -128,7 +130,7 @@ public class HashListChainingTest {
 
 	@Test
 	public void countHashId_test_2() {
-		hashListChaining = new HashListChaining<String>(5);
+		HashListChaining<String> hashListChaining = new HashListChaining<String>(5);
 
 		assertEquals(0, hashListChaining.countLoadFactor(), 0.0);
 
@@ -147,7 +149,7 @@ public class HashListChainingTest {
 
 	@Test
 	public void countHashId_test_3() {
-		hashListChaining = new HashListChaining<String>(20);
+		HashListChaining<String> hashListChaining = new HashListChaining<String>(20);
 
 		assertEquals(0, hashListChaining.countLoadFactor(), 0.0);
 
@@ -221,5 +223,22 @@ public class HashListChainingTest {
 
 			assertNull(hashTable.get(el));
 		}
+	}
+
+	@Test
+	public void count_minus_hashid_problem_test() {
+		HashListChaining<String> hashListChaining = new HashListChaining<String>(1000);
+		assertTrue(hashListChaining.countHashIdHelp(minusHashIdWord) >= 0);
+	}
+
+	@Test
+	public void count_blank_hashid_problem_test() {
+		HashListChaining<String> hashListChaining = new HashListChaining<String>(1000);
+		assertTrue(hashListChaining.countHashIdHelp(blankHashIdWord) >= 0);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void zero_hash_list_len() {
+		HashListChaining<String> hashListChaining = new HashListChaining<String>(0);
 	}
 }

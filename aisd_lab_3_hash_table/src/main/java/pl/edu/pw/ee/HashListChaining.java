@@ -18,6 +18,9 @@ public class HashListChaining<T extends Comparable<T>> implements HashTable<T> {
 	}
 
 	public HashListChaining(int size) {
+		if (size <= 0) {
+			throw new IllegalArgumentException("Size of Hash List could not be smaller than 1");
+		}
 		hashElems = new Elem[size];
 		initializeHash();
 	}
@@ -32,6 +35,8 @@ public class HashListChaining<T extends Comparable<T>> implements HashTable<T> {
 		int hashCode = value.hashCode();
 		int hashId = countHashId(hashCode);
 
+
+		System.out.println(hashId);
 
 		Elem<T> oldElem = hashElems[hashId];
 
@@ -118,7 +123,12 @@ public class HashListChaining<T extends Comparable<T>> implements HashTable<T> {
 
 	private int countHashId(int hashCode) {
 		int n = hashElems.length;
-		return Math.abs(hashCode) % n;
+		return Math.abs(hashCode % n);
+	}
+
+	public int countHashIdHelp(T ob) {
+
+		return countHashId(ob.hashCode());
 	}
 
 }
