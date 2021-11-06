@@ -35,9 +35,6 @@ public class HashListChaining<T extends Comparable<T>> implements HashTable<T> {
 		int hashCode = value.hashCode();
 		int hashId = countHashId(hashCode);
 
-
-		System.out.println(hashId);
-
 		Elem<T> oldElem = hashElems[hashId];
 
 		if (oldElem != null) {
