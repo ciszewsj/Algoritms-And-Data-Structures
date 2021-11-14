@@ -1,18 +1,33 @@
 package pl.edu.pw.ee;
 
 public class HashQuadraticProbing<T extends Comparable<T>> extends HashOpenAdressing<T> {
-	private static int a = 1;
-	private static int b = 2;
+	private double a = 1;
+	private double b = 2;
+
+	public HashQuadraticProbing() {
+		super();
+	}
+
+	public HashQuadraticProbing(int size) {
+		super(size);
+	}
+
+	public HashQuadraticProbing(int size, double a, double b) {
+		super(size);
+		if (a == 0 || b == 0) {
+			throw new IllegalArgumentException("a and b could not be 0");
+		}
+		this.a = a;
+		this.b = b;
+
+	}
 
 	@Override
 	int hashFunc(int key, int i) {
-		int hash = hashFunc(key, 0) + a * i + b * i * i;
-		if (hash == Integer.MIN_VALUE) {
-			hash += 1;
-		}
-		if (hash < 0) {
-			hash *= -1;
-		}
-		return hash;
+		int m = getSize();
+
+		int hash = (key % m + (int) a * i + (int) b * i * i) % m;
+
+		return hash < 0 ? -hash : hash;
 	}
 }

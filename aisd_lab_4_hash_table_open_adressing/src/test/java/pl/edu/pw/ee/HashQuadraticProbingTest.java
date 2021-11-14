@@ -1,28 +1,26 @@
 package pl.edu.pw.ee;
 
-import java.lang.reflect.Field;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import pl.edu.pw.ee.data.TestDatas;
 import pl.edu.pw.ee.services.HashTable;
 
+import java.lang.reflect.Field;
+
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertNull;
 import static pl.edu.pw.ee.data.TestDatas.blankHashIdWord;
 import static pl.edu.pw.ee.data.TestDatas.minusHashIdWord;
 
-public class HashLinearProbingTest {
+public class HashQuadraticProbingTest {
 
 	HashTable<String> hashObjectIInterface;
 
-	HashLinearProbing<String> hashObject;
+	HashQuadraticProbing<String> hashObject;
 
 	@Before
 	public void init() {
-		hashObjectIInterface = new HashLinearProbing<String>(1);
-		hashObject = new HashLinearProbing<String>(1);
+		hashObjectIInterface = new HashQuadraticProbing<String>(1);
+		hashObject = new HashQuadraticProbing<String>(1);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -31,7 +29,7 @@ public class HashLinearProbingTest {
 		int initialSize = 0;
 
 		// when
-		HashTable<Double> hash = new HashLinearProbing<>(initialSize);
+		HashTable<Double> hash = new HashQuadraticProbing<>(initialSize);
 
 		// then
 		assert false;
@@ -40,7 +38,7 @@ public class HashLinearProbingTest {
 	@Test
 	public void should_CorrectlyAddNewElems_WhenNotExistInHashTable() {
 		// given
-		HashTable<String> emptyHash = new HashLinearProbing<>();
+		HashTable<String> emptyHash = new HashQuadraticProbing<>();
 		String newEleme = "nothing special";
 
 		// when
@@ -316,20 +314,25 @@ public class HashLinearProbingTest {
 
 	@Test
 	public void count_minus_hashid_problem_test() {
-		hashObject = new HashLinearProbing<String>(1000);
+		hashObject = new HashQuadraticProbing<String>(1000);
 		assertTrue(hashObject.countHashId(minusHashIdWord.hashCode()) >= 0);
 		assertTrue(hashObject.countHashId(Integer.MIN_VALUE) >= 0);
 	}
 
 	@Test
 	public void count_blank_hashid_problem_test() {
-		hashObject = new HashLinearProbing<String>(1000);
+		hashObject = new HashQuadraticProbing<String>(1000);
 		assertTrue(hashObject.countHashId(blankHashIdWord.hashCode()) >= 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void zero_hash_list_len() {
-		hashObject = new HashLinearProbing<String>(0);
+		hashObject = new HashQuadraticProbing<String>(0);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void a_b_is_0() {
+		hashObject = new HashQuadraticProbing<String>(100, 0, 0);
 	}
 
 }

@@ -5,17 +5,16 @@ import pl.edu.pw.ee.services.HashTable;
 
 public abstract class HashOpenAdressing<T extends Comparable<T>> implements HashTable<T> {
 
-	private final T nil = null;
 	private int size;
 	private int nElems;
 	private T[] hashElems;
 	private final double correctLoadFactor;
 
-	HashOpenAdressing() {
+	public HashOpenAdressing() {
 		this(2039); // initial size as random prime number
 	}
 
-	HashOpenAdressing(int size) {
+	public HashOpenAdressing(int size) {
 		validateHashInitSize(size);
 
 		this.size = size;
@@ -23,34 +22,98 @@ public abstract class HashOpenAdressing<T extends Comparable<T>> implements Hash
 		this.correctLoadFactor = 0.75;
 	}
 
-	@Override
-	public void put(T newElem) {
+	private int findFreeHash(T objectFind) {
+		int hashId;
+		int i = 0;
+
+
+		do {
+			if (i == getSize()) {
+				throw new IllegalStateException("Could not find object");
+			}
+			hashId = hashFunc(objectFind.hashCode(), i);
+			i = i + 1;
+			if (objectFind.equals(hashElems[hashId])) {
+				throw new IllegalArgumentException("Element is in hash");
+			}
+		} while (hashElems[hashId] != null);
+
+		return hashId;
+	}
+
+	private int findObjectHash(T objectFind) {
+		int hashId;
+		int i = 0;
+
+
+		do {
+			if (i == getSize()) {
+				throw new IllegalStateException("Could not find object");
+			}
+			hashId = hashFunc(objectFind.hashCode(), i);
+
+			if (hashElems[hashId] == null) {
+				throw new IllegalArgumentException("Element is not in hash");
+			}
+
+			i = i + 1;
+		} while (hashElems[hashId] != objectFind);
+
+		return hashId;
+	}
+
+	private void putElem(T newElem) {
+		int hashId;
 		validateInputElem(newElem);
 		resizeIfNeeded();
 
-		int key = newElem.hashCode();
-		int i = 0;
-		int hashId = hashFunc(key, i);
+		try {
+			hashId = findFreeHash(newElem);
 
-		while (hashElems[hashId] != nil) {
-			i = (i + 1) % size;
-			hashId = hashFunc(key, i);
+		} catch (IllegalStateException | IllegalArgumentException e) {
+			throw new IllegalStateException("Could not insert object");
 		}
-
 		hashElems[hashId] = newElem;
-		nElems++;
 	}
 
 	@Override
+	public void put(T newElem) {
+
+		putElem(newElem);
+
+		nElems++;
+
+	}
+
+
+	@Override
 	public T get(T elem) {
-		// TODO Auto-generated method stub
-		return null;
+		int hashId;
+		validateInputElem(elem);
+
+		try {
+			hashId = findObjectHash(elem);
+		} catch (IllegalStateException | IllegalArgumentException e) {
+			throw new IllegalStateException("Could not find object");
+		}
+
+		return hashElems[hashId];
 	}
 
 	@Override
 	public void delete(T elem) {
-		// TODO Auto-generated method stub
+		int hashId;
+		validateInputElem(elem);
 
+		try {
+			hashId = findObjectHash(elem);
+		} catch (IllegalStateException | IllegalArgumentException e) {
+			throw new IllegalStateException("Could not find object");
+		}
+
+		hashElems[hashId] = null;
+		nElems--;
+		reIndexHash();
 	}
 
 	private void validateHashInitSize(int initialSize) {
@@ -79,12 +142,40 @@ public abstract class HashOpenAdressing<T extends Comparable<T>> implements Hash
 		}
 	}
 
-	private double countLoadFactor() {
+	public double countLoadFactor() {
 		return (double) nElems / size;
 	}
 
 	private void doubleResize() {
-		this.size *= 2;
-		throw new NotImplementedException("This method is not yet implemented!");
+		if (this.size != Integer.MAX_VALUE) {
+			if (this.size * 2 > this.size) {
+				this.size = this.size * 2;
+			} else {
+				this.size = Integer.MAX_VALUE;
+			}
+
+			try {
+				reIndexHash();
+			} catch (OutOfMemoryError e) {
+				throw new OutOfMemoryError("Could not  resize ");
+			}
+
+		} else {
+			throw new IllegalStateException("Hash is max size");
+		}
+	}
+
+	private void reIndexHash() {
+		T[] oldHash = this.hashElems;
+		this.hashElems = (T[]) new Comparable[this.size];
+		for (T elem : oldHash) {
+			if (elem != null) {
+				putElem(elem);
+			}
+		}
+	}
+
+	public int countHashId(int hashCode) {
+		return hashFunc(hashCode, 0);
 	}
 }

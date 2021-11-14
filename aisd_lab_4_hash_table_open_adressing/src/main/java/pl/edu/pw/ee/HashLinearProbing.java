@@ -5,7 +5,6 @@ public class HashLinearProbing<T extends Comparable<T>> extends HashOpenAdressin
 	public HashLinearProbing() {
 		super();
 	}
-
 	public HashLinearProbing(int size) {
 		super(size);
 	}
@@ -14,11 +13,8 @@ public class HashLinearProbing<T extends Comparable<T>> extends HashOpenAdressin
 	int hashFunc(int key, int i) {
 		int m = getSize();
 
-		int hash = (key % m + i) % m;
+		int hash = (key + i) % m;
 
-
-		hash = hash < 0 ? -hash : hash;
-
-		return hash;
+		return hash < 0 ? -hash : hash;
 	}
 }
