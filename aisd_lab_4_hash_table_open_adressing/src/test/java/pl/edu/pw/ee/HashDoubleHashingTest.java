@@ -10,10 +10,9 @@ import pl.edu.pw.ee.services.HashTable;
 import java.lang.reflect.Field;
 
 import static org.junit.Assert.*;
-import static pl.edu.pw.ee.data.TestDatas.blankHashIdWord;
-import static pl.edu.pw.ee.data.TestDatas.minusHashIdWord;
+import static pl.edu.pw.ee.data.TestDatas.*;
 
-public class HashDoubleProbingTest {
+public class HashDoubleHashingTest {
 
 	HashTable<String> hashObjectIInterface;
 
@@ -331,5 +330,10 @@ public class HashDoubleProbingTest {
 		hashObject = new HashDoubleHashing<String>(0);
 	}
 
+	@Test
+	public void zero_hash_value_problem() {
+		hashObject = new HashDoubleHashing<String>(2048);
 
+		assertTrue(hashObject.hashFunc(notChangeHashDoubleHashing.hashCode(), 0) != hashObject.hashFunc(notChangeHashDoubleHashing.hashCode(), 1));
+	}
 }

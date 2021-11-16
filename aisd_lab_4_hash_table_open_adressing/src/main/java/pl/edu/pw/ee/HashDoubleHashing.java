@@ -17,7 +17,8 @@ public class HashDoubleHashing<T extends Comparable<T>> extends HashOpenAdressin
 
 		int f = key % m;
 
-		int g = 1 + key % (m - 3);
+		int g = 1 + Math.abs(key % (m - 3));
+
 
 		int hash = (f + i * g) % m;
 

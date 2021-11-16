@@ -25,27 +25,22 @@ public abstract class HashOpenAdressing<T extends Comparable<T>> implements Hash
 	private int findFreeHash(T objectFind) {
 		int hashId;
 		int i = 0;
-
-
 		do {
 			if (i == getSize()) {
-				throw new IllegalStateException("Could not find object");
+				doubleResize();
 			}
 			hashId = hashFunc(objectFind.hashCode(), i);
 			i = i + 1;
 			if (objectFind.equals(hashElems[hashId])) {
-				throw new IllegalArgumentException("Element is in hash");
+				return hashId;
 			}
 		} while (hashElems[hashId] != null);
-
 		return hashId;
 	}
 
 	private int findObjectHash(T objectFind) {
 		int hashId;
 		int i = 0;
-
-
 		do {
 			if (i == getSize()) {
 				throw new IllegalStateException("Could not find object");
@@ -69,8 +64,7 @@ public abstract class HashOpenAdressing<T extends Comparable<T>> implements Hash
 
 		try {
 			hashId = findFreeHash(newElem);
-
-		} catch (IllegalStateException | IllegalArgumentException e) {
+		} catch (OutOfMemoryError e) {
 			throw new IllegalStateException("Could not insert object");
 		}
 		hashElems[hashId] = newElem;

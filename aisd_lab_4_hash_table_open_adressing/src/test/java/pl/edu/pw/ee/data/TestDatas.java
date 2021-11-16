@@ -11,4 +11,6 @@ public class TestDatas {
 
 	public static String minusHashIdWord = "polygenelubricants";
 	public static String blankHashIdWord = "";
+
+	public static String notChangeHashDoubleHashing = "absolution";
 }
