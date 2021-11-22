@@ -22,7 +22,7 @@ public class ReadStringsFromFile {
 	public void init() throws FileNotFoundException {
 		path = System.getProperty("user.dir") + "\\src\\test\\java\\pl\\edu\\pw\\ee\\data\\";
 		strings = ReadStringsFromFile.readWordsFromFile(path + "test_data_words.txt", 100000);
-		sizes = new int[]{4096, 4096 * 2, 4096 * 3, 4096 * 4, 4096 * 5, 4096 * 6, 4096 * 7};
+		sizes = new int[]{4096, 4096 * 2, 4096 * 2 * 2, 4096 * 2 * 2 * 2, 4096 * 2 * 2 * 2 * 2, 4096 * 2 * 2 * 2 * 2 * 2, 4096 * 2 * 2 * 2 * 2 * 2 * 2};
 	}
 
 	@Test
