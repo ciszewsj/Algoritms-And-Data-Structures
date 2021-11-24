@@ -23,7 +23,9 @@ public class RbtMap<K extends Comparable<K>, V> implements MapInterface<K, V> {
 		if (key == null) {
 			throw new IllegalArgumentException("Cannot get value by null key.");
 		}
+
 		return tree.get(key);
 	}
+
 
 }

@@ -1,154 +1,273 @@
 package pl.edu.pw.ee;
 
+import com.sun.nio.sctp.IllegalUnbindException;
+
 import static pl.edu.pw.ee.Color.BLACK;
 import static pl.edu.pw.ee.Color.RED;
 
 public class RedBlackTree<K extends Comparable<K>, V> {
 
-    private Node<K, V> root;
+	private Node<K, V> root;
 
-    public V get(K key) {
-        validateKey(key);
-        Node<K, V> node = root;
+	private String notElementFound = "Not element with key in map";
+	private String emptyListPrint = "Could not print empty map";
 
-        V result = null;
+	public V get(K key) {
+		validateKey(key);
+		Node<K, V> node = root;
 
-        while (node != null) {
+		V result = null;
 
-            if (shouldCheckOnTheLeft(key, node)) {
-                node = node.getLeft();
+		while (node != null) {
 
-            } else if (shouldCheckOnTheRight(key, node)) {
-                node = node.getRight();
+			if (shouldCheckOnTheLeft(key, node)) {
+				node = node.getLeft();
 
-            } else {
-                result = node.getValue();
-                break;
-            }
-        }
-        return result;
-    }
+			} else if (shouldCheckOnTheRight(key, node)) {
+				node = node.getRight();
 
-    public void put(K key, V value) {
-        validateParams(key, value);
-        root = put(root, key, value);
-        root.setColor(BLACK);
-    }
+			} else {
+				result = node.getValue();
+				break;
+			}
+		}
+		if (node == null) {
+			throw new IllegalStateException(notElementFound);
+		} else if (node.getKey() != key) {
+			throw new IllegalStateException(notElementFound);
+		}
 
-    private void validateKey(K key) {
-        if (key == null) {
-            throw new IllegalArgumentException("Key cannot be null.");
-        }
-    }
+		return result;
+	}
 
-    private boolean shouldCheckOnTheLeft(K key, Node<K, V> node) {
-        return key.compareTo(node.getKey()) < 0;
-    }
+	public int put(K key, V value) {
+		validateParams(key, value);
+		int deep = putToRoot(key, value);
+		reorganizeTree(root, null);
+		return deep;
+	}
 
-    private boolean shouldCheckOnTheRight(K key, Node<K, V> node) {
-        return key.compareTo(node.getKey()) > 0;
-    }
+	private void validateParams(K key, V value) {
+		if (key == null || value == null) {
+			System.out.println(key + "   " + value);
+			throw new IllegalArgumentException("Input params (key, value) cannot be null.");
+		}
+	}
 
-    private void validateParams(K key, V value) {
-        if (key == null || value == null) {
-            throw new IllegalArgumentException("Input params (key, value) cannot be null.");
-        }
-    }
+	private void reorganizeTree(Node<K, V> node, Node<K, V> parent) {
+		if (node != null) {
+			if (node.getLeft() != null) {
+				reorganizeTree(node.getLeft(), node);
+			} else if (node.getRight() != null) {
+				reorganizeTree(node.getRight(), node);
+			}
+			if (isRed(node.getLeft()) && isRed(node.getLeft().getLeft())) {
+				Node<K, V> pom = node.getLeft();
+				node.setLeft(pom.getRight());
+				pom.setRight(node);
+				pom.setColor(BLACK);
+				node.setColor(RED);
+				changeNode(node, parent, pom);
+			}
+			if (isBlack(node.getLeft()) && isRed(node.getRight())) {
+				Node<K, V> pom = node.getRight();
+				node.setRight(pom.getLeft());
+				pom.setLeft(node);
+				changeNode(node, parent, pom);
+			}
 
-    private Node<K, V> put(Node<K, V> node, K key, V value) {
-        if (node == null) {
-            return new Node(key, value);
-        }
+			if (isRed(node.getLeft()) && isRed(node.getRight())) {
+				node.setColor(RED);
+				node.getLeft().setColor(BLACK);
+				node.getRight().setColor(BLACK);
+			}
+		}
+	}
 
-        if (isKeyBiggerThanNode(key, node)) {
-            putOnTheRight(node, key, value);
+	private void changeNode(Node<K, V> node, Node<K, V> parent, Node<K, V> pom) {
+		if (parent != null) {
+			if (parent.getLeft().getValue().equals(node.getValue())) {
+				parent.setLeft(pom);
+			} else {
+				parent.setRight(pom);
+			}
+		} else {
+			root = pom;
+			root.setColor(BLACK);
+		}
+//		reorganizeTree(pom, parent);
+	}
 
-        } else if (isKeySmallerThanNode(key, node)) {
-            putOnTheLeft(node, key, value);
 
-        } else {
-            node.setValue(value);
-        }
+	private boolean isBlack(Node<K, V> node) {
+		return !isRed(node);
+	}
 
-        node = reorganizeTree(node);
+	private boolean isRed(Node<K, V> node) {
+		return node != null && node.isRed();
+	}
 
-        return node;
-    }
+	private int putToRoot(K key, V value) {
+		int deep = 1;
+		if (root == null) {
+			root = new Node<>(key, value);
+		} else {
+			Node<K, V> current = root;
+			do {
+				if (key.compareTo(current.getKey()) == 0) {
+					throw new IllegalStateException("Object with this key is already in map");
+				} else if (key.compareTo(current.getKey()) < 0) {
+					if (current.getLeft() == null) {
+						current.setLeft(new Node<>(key, value));
+						break;
+					} else {
+						current = current.getLeft();
+					}
+				} else {
+					if (current.getRight() == null) {
+						current.setRight(new Node<>(key, value));
+						break;
+					} else {
+						current = current.getRight();
 
-    private boolean isKeyBiggerThanNode(K key, Node<K, V> node) {
-        return key.compareTo(node.getKey()) > 0;
-    }
+					}
+				}
+				deep += 1;
+			} while (true);
+		}
+		return deep;
+	}
 
-    private void putOnTheRight(Node<K, V> node, K key, V value) {
-        Node<K, V> rightChild = put(node.getRight(), key, value);
-        node.setRight(rightChild);
-    }
+	private void validateKey(K key) {
+		if (key == null) {
+			throw new IllegalArgumentException("Key cannot be null.");
+		}
+	}
 
-    private boolean isKeySmallerThanNode(K key, Node<K, V> node) {
-        return key.compareTo(node.getKey()) < 0;
-    }
+	private boolean shouldCheckOnTheLeft(K key, Node<K, V> node) {
+		return key.compareTo(node.getKey()) < 0;
+	}
 
-    private void putOnTheLeft(Node<K, V> node, K key, V value) {
-        Node<K, V> leftChild = put(node.getLeft(), key, value);
-        node.setLeft(leftChild);
-    }
+	private boolean shouldCheckOnTheRight(K key, Node<K, V> node) {
+		return key.compareTo(node.getKey()) > 0;
+	}
 
-    private Node<K, V> reorganizeTree(Node<K, V> node) {
-        node = rotateLeftIfNeeded(node);
-        node = rotateRightIfNeeded(node);
-        changeColorsIfNeeded(node);
+	public void deleteMax() {
+		if (root == null) {
+			throw new IllegalStateException("Could not remove element. Map is empty");
+		}
+		root.setColor(RED);
+		deorganizeTree(root, null);
+		removeMaxElement(root, null);
+		reorganizeTree(root, null);
+	}
 
-        return node;
-    }
+	private void deorganizeTree(Node<K, V> node, Node<K, V> parent) {
+		if (node.getLeft() != null && node.getRight() != null) {
+			if (isBlack(node.getLeft()) && isRed(node.getRight())) {
+				node.getLeft().getLeft().setColor(RED);
+				node.getRight().getLeft().setColor(RED);
+				deorganizeTree(node.getRight(), node);
+			} else if (isRed(node.getLeft()) && isBlack(node.getRight())) {
+				if (isBlack(node.getLeft().getRight()) && node.getLeft().getRight() != null &&
+						isBlack(node.getLeft().getLeft()) && node.getLeft().getLeft() != null
+				) {
+					node.getLeft().setColor(BLACK);
+					node.getLeft().getLeft().setColor(RED);
+					node.getLeft().getRight().setColor(RED);
+					deorganizeTree(node, parent);
+				} else {
+					throw new IllegalUnbindException("WTF ?");
+				}
+			}
+		} else if (node.getLeft() != null) {
+			node.getLeft().setRight(node);
+			if (parent != null) {
+				parent.setRight(node.getLeft());
+			} else {
+				root = node.getLeft();
+			}
+			node.setLeft(null);
+		}
+	}
 
-    private Node<K, V> rotateLeftIfNeeded(Node<K, V> node) {
-        if (isBlack(node.getLeft()) && isRed(node.getRight())) {
-            node = rotateLeft(node);
-        }
-        return node;
-    }
+	private void removeMaxElement(Node<K, V> node, Node<K, V> parent) {
+		if (node.getRight() != null) {
+			removeMaxElement(node.getRight(), node);
+		} else if (parent != null) {
+			parent.setRight(null);
+		} else {
+			root = null;
+		}
+	}
 
-    private Node<K, V> rotateLeft(Node<K, V> node) {
-        Node<K, V> head = node.getRight();
-        node.setRight(head.getLeft());
-        head.setLeft(node);
-        head.setColor(node.getColor());
-        node.setColor(RED);
+	public String getPreOrder() {
+		if (root == null) {
+			throw new IllegalStateException(emptyListPrint);
+		}
+		return getPreOrder(root);
+	}
 
-        return head;
-    }
+	private String getPreOrder(Node<K, V> node) {
+		String text = "";
+		if (node.getLeft() != null) {
+			text = addStrings(text, getInOrder(node.getLeft()));
+		}
+		if (node.getRight() != null) {
+			text = addStrings(text, getInOrder(node.getRight()));
+		}
+		text = addStrings(text, node.toString());
+		return text;
+	}
 
-    private Node<K, V> rotateRightIfNeeded(Node<K, V> node) {
-        if (isRed(node.getLeft()) && isRed(node.getLeft().getLeft())) {
-            node = rotateRight(node);
-        }
-        return node;
-    }
 
-    private Node<K, V> rotateRight(Node<K, V> node) {
-	// TODO
-        return null;
-    }
+	public String getInOrder() {
+		if (root == null) {
+			throw new IllegalStateException(emptyListPrint);
+		}
+		return getInOrder(root);
+	}
 
-    private void changeColorsIfNeeded(Node<K, V> node) {
-        if (isRed(node.getLeft()) && isRed(node.getRight())) {
-            changeColors(node);
-        }
-    }
+	private String getInOrder(Node<K, V> node) {
+		String text = "";
+		if (node.getLeft() != null) {
+			text = addStrings(text, getInOrder(node.getLeft()));
+		}
+		text = addStrings(text, node.toString());
+		if (node.getRight() != null) {
+			text = addStrings(text, getInOrder(node.getRight()));
+		}
+		return text;
+	}
 
-    private void changeColors(Node<K, V> node) {
-        node.setColor(RED);
-        node.getLeft().setColor(BLACK);
-        node.getRight().setColor(BLACK);
-    }
 
-    private boolean isBlack(Node<K, V> node) {
-        return !isRed(node);
-    }
+	public String getPostOrder() {
+		if (root == null) {
+			throw new IllegalStateException(emptyListPrint);
+		}
+		return getPostOrder(root);
+	}
 
-    private boolean isRed(Node<K, V> node) {
-        return node == null
-                ? false
-                : node.isRed();
-    }
+	private String getPostOrder(Node<K, V> node) {
+		String text = "";
+		text = addStrings(text, node.toString());
+		if (node.getLeft() != null) {
+			text = addStrings(text, getInOrder(node.getLeft()));
+		}
+		if (node.getRight() != null) {
+			text = addStrings(text, getInOrder(node.getRight()));
+		}
+		return text;
+	}
+
+	private String addStrings(String s1, String s2) {
+		if (s1.length() > 0) {
+			if (s2.length() > 0) {
+				return s1 + " " + s2;
+			}
+			return s1;
+		}
+		return s2;
+	}
+
 }
