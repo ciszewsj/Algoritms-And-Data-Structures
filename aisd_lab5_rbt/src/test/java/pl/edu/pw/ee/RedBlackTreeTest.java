@@ -1,9 +1,11 @@
 package pl.edu.pw.ee;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static pl.edu.pw.ee.Datas.*;
 
 
 public class RedBlackTreeTest {
@@ -20,22 +22,48 @@ public class RedBlackTreeTest {
 		for (Datas.KeyIntValueString keyIntValueString : Datas.data_1) {
 			tree.put(keyIntValueString.key, keyIntValueString.value);
 		}
-		for (Datas.KeyIntValueString keyIntValueString : Datas.data_1) {
-			assertEquals(keyIntValueString.value, tree.get(keyIntValueString.key));
-		}
+		assertEquals(post_order_data_1, tree.getPostOrder());
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
+	public void get_in_order_test() {
+		for (Datas.KeyIntValueString keyIntValueString : Datas.data_1) {
+			tree.put(keyIntValueString.key, keyIntValueString.value);
+		}
+		assertEquals(in_order_data_1, tree.getInOrder());
+	}
+
+	@Test
+	public void get_pre_order_test() {
+		for (Datas.KeyIntValueString keyIntValueString : Datas.data_1) {
+			tree.put(keyIntValueString.key, keyIntValueString.value);
+		}
+		assertEquals(pre_order_data_1, tree.getPreOrder());
+	}
+
+	@Test
 	public void delete_test() {
 		for (Datas.KeyIntValueString keyIntValueString : Datas.data_1) {
 			tree.put(keyIntValueString.key, keyIntValueString.value);
 		}
-		System.out.println(tree.getInOrder());
+		int i = data_1.length;
 		for (Datas.KeyIntValueString keyIntValueString : Datas.data_1) {
 			tree.deleteMax();
-			System.out.println(tree.getInOrder());
+			i -= 1;
+			for (int j = 0; j < i; j++) {
+
+
+				tree.get(data_1[j].key);
+			}
+			for (int j = 1; j < (data_1.length - i - 1); j++) {
+				try {
+					tree.get(data_1[data_1.length - j].key);
+					fail();
+				} catch (IllegalStateException ignored) {
+
+				}
+			}
 		}
-		System.out.println(tree.getInOrder());
 	}
 
 	@Test(expected = IllegalStateException.class)

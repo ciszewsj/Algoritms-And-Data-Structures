@@ -18,7 +18,7 @@ public class RbtDeepInsertTest {
 
 	@Before
 	public void init() throws FileNotFoundException {
-		rbt = new RedBlackTree();
+		rbt = new RedBlackTree<>();
 		strings = readWordsFromFile("test_data_words.txt");
 	}
 
@@ -26,10 +26,8 @@ public class RbtDeepInsertTest {
 	public void deepRbtTest() {
 		List<ReadStringsFromFile.AverageData> averageDataList = new ArrayList<>();
 		for (String word : strings) {
-			if (word == null) {
-				System.out.println(word);
-			}
-			averageDataList.add(new ReadStringsFromFile.AverageData(rbt.put(word, word)));
+			rbt.put(word, word);
+			averageDataList.add(new ReadStringsFromFile.AverageData(rbt.getPutDeep()));
 		}
 		saveToFile("Result.txt", averageDataList);
 	}
