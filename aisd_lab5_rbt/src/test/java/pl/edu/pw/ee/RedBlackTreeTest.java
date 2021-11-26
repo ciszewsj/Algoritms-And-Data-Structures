@@ -86,6 +86,19 @@ public class RedBlackTreeTest {
 
 	}
 
+	@Test
+	public void oneElementDelete() {
+		tree.put(data_1[0].key, data_1[0].value);
+		tree.deleteMax();
+		try {
+			tree.get(data_1[0].key);
+			fail();
+		} catch (IllegalStateException ignored) {
+
+		}
+	}
+
+
 	@Test(expected = IllegalStateException.class)
 	public void empty_delete_test() {
 		tree.deleteMax();
