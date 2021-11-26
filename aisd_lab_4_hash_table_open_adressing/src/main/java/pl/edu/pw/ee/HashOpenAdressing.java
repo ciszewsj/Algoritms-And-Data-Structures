@@ -1,14 +1,47 @@
 package pl.edu.pw.ee;
 
-import pl.edu.pw.ee.exceptions.NotImplementedException;
 import pl.edu.pw.ee.services.HashTable;
 
 public abstract class HashOpenAdressing<T extends Comparable<T>> implements HashTable<T> {
 
 	private int size;
 	private int nElems;
-	private T[] hashElems;
+	private HashElemObject<T>[] hashElems;
 	private final double correctLoadFactor;
+
+	private class HashElemObject<T extends Comparable<T>> {
+		private T value;
+		private boolean free;
+
+		public HashElemObject() {
+			value = null;
+			free = true;
+		}
+
+		public T getValue() {
+			return value;
+		}
+
+		public void setValue(T value) {
+			this.value = value;
+			free = false;
+		}
+
+		public boolean isFree() {
+			return free;
+		}
+
+		public void clear() {
+			this.value = null;
+		}
+	}
+
+	private void setHashElemsList() {
+		hashElems = new HashElemObject[size];
+		for (int i = 0; i < size; i++) {
+			hashElems[i] = new HashElemObject<>();
+		}
+	}
 
 	public HashOpenAdressing() {
 		this(2039); // initial size as random prime number
@@ -18,7 +51,7 @@ public abstract class HashOpenAdressing<T extends Comparable<T>> implements Hash
 		validateHashInitSize(size);
 
 		this.size = size;
-		this.hashElems = (T[]) new Comparable[this.size];
+		setHashElemsList();
 		this.correctLoadFactor = 0.75;
 	}
 
@@ -28,13 +61,14 @@ public abstract class HashOpenAdressing<T extends Comparable<T>> implements Hash
 		do {
 			if (i == getSize()) {
 				doubleResize();
+				i = 0;
 			}
 			hashId = hashFunc(objectFind.hashCode(), i);
 			i = i + 1;
-			if (objectFind.equals(hashElems[hashId])) {
+			if (objectFind.equals(hashElems[hashId].value)) {
 				return hashId;
 			}
-		} while (hashElems[hashId] != null);
+		} while (hashElems[hashId].getValue() != null);
 		return hashId;
 	}
 
@@ -47,12 +81,12 @@ public abstract class HashOpenAdressing<T extends Comparable<T>> implements Hash
 			}
 			hashId = hashFunc(objectFind.hashCode(), i);
 
-			if (hashElems[hashId] == null) {
+			if (hashElems[hashId].isFree()) {
 				throw new IllegalArgumentException("Element is not in hash");
 			}
 
 			i = i + 1;
-		} while (hashElems[hashId] != objectFind);
+		} while (hashElems[hashId].getValue() != objectFind);
 
 		return hashId;
 	}
@@ -67,7 +101,7 @@ public abstract class HashOpenAdressing<T extends Comparable<T>> implements Hash
 		} catch (OutOfMemoryError e) {
 			throw new IllegalStateException("Could not insert object");
 		}
-		hashElems[hashId] = newElem;
+		hashElems[hashId].setValue(newElem);
 	}
 
 	@Override
@@ -91,7 +125,7 @@ public abstract class HashOpenAdressing<T extends Comparable<T>> implements Hash
 			throw new IllegalStateException("Could not find object");
 		}
 
-		return hashElems[hashId];
+		return hashElems[hashId].getValue();
 	}
 
 	@Override
@@ -104,10 +138,8 @@ public abstract class HashOpenAdressing<T extends Comparable<T>> implements Hash
 		} catch (IllegalStateException | IllegalArgumentException e) {
 			throw new IllegalStateException("Could not find object");
 		}
-
-		hashElems[hashId] = null;
+		hashElems[hashId].clear();
 		nElems--;
-		reIndexHash();
 	}
 
 	private void validateHashInitSize(int initialSize) {
@@ -151,7 +183,7 @@ public abstract class HashOpenAdressing<T extends Comparable<T>> implements Hash
 			try {
 				reIndexHash();
 			} catch (OutOfMemoryError e) {
-				throw new OutOfMemoryError("Could not  resize ");
+				throw new OutOfMemoryError("Could not resize");
 			}
 
 		} else {
@@ -160,11 +192,11 @@ public abstract class HashOpenAdressing<T extends Comparable<T>> implements Hash
 	}
 
 	private void reIndexHash() {
-		T[] oldHash = this.hashElems;
-		this.hashElems = (T[]) new Comparable[this.size];
-		for (T elem : oldHash) {
-			if (elem != null) {
-				putElem(elem);
+		HashElemObject<T>[] oldHash = this.hashElems;
+		setHashElemsList();
+		for (HashElemObject<T> elem : oldHash) {
+			if (!elem.isFree()) {
+				putElem(elem.getValue());
 			}
 		}
 	}
