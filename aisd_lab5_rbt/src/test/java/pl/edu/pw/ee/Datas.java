@@ -1,7 +1,5 @@
 package pl.edu.pw.ee;
 
-import java.util.List;
-
 public class Datas {
 	public static class KeyIntValueString {
 		public int key;

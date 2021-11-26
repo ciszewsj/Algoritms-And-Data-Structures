@@ -1,10 +1,10 @@
 package pl.edu.pw.ee;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static pl.edu.pw.ee.Datas.*;
 
 
@@ -64,6 +64,26 @@ public class RedBlackTreeTest {
 				}
 			}
 		}
+	}
+
+	@Test
+	public void deleteAndAddTestOrders() {
+		for (Datas.KeyIntValueString keyIntValueString : Datas.data_1) {
+			tree.put(keyIntValueString.key, keyIntValueString.value);
+		}
+		assertEquals(post_order_data_1, tree.getPostOrder());
+		assertEquals(in_order_data_1, tree.getInOrder());
+		assertEquals(pre_order_data_1, tree.getPreOrder());
+
+		tree.deleteMax();
+
+		tree.put(data_1[data_1.length - 1].key, data_1[data_1.length - 1].value);
+
+		assertEquals(post_order_data_1, tree.getPostOrder());
+		assertEquals(in_order_data_1, tree.getInOrder());
+		assertEquals(pre_order_data_1, tree.getPreOrder());
+
+
 	}
 
 	@Test(expected = IllegalStateException.class)

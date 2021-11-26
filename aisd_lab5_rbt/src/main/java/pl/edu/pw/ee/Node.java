@@ -61,15 +61,4 @@ public class Node<K extends Comparable<K>, V> {
 		return key + ":" + value;
 	}
 
-	public String debug() {
-		K prawy = null;
-		K lewy = null;
-		if (getRight() != null) {
-			prawy = getRight().getKey();
-		}
-		if (getLeft() != null) {
-			lewy = getLeft().getKey();
-		}
-		return key + ":" + value + ">>" + color + "   LEFT>> " + lewy + "      RIGHT>>" + prawy + "\n";
-	}
 }

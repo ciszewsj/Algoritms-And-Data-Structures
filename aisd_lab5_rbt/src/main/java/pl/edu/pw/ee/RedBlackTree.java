@@ -263,8 +263,9 @@ public class RedBlackTree<K extends Comparable<K>, V> {
 		if (node.getLeft() == null && node.getRight() == null) {
 			return node;
 		}
+
+
 		node = unrotateLeftIfNeeded(node);
-		node = unrotatEndIfNeeded(node);
 		unchangeColorsIfNeeded(node);
 
 		node.setRight(deorganizeTree(node.getRight()));
@@ -282,21 +283,9 @@ public class RedBlackTree<K extends Comparable<K>, V> {
 		Node<K, V> head = node.getLeft();
 		node.setLeft(head.getRight());
 		head.setRight(node);
-		head.setColor(RED);
-		node.setColor(BLACK);
-		return head;
-	}
-
-	private Node<K, V> unrotatEndIfNeeded(Node<K, V> node) {
-		if (node.getRight() == null && node.getLeft() != null) {
-			node = unrotatEnd(node);
-		}
-		return node;
-	}
-
-	private Node<K, V> unrotatEnd(Node<K, V> node) {
-		Node<K, V> head = node.getLeft();
-		head.setRight(node);
+		Color color = head.getColor();
+		head.setColor(node.getColor());
+		node.setColor(color);
 		return head;
 	}
 
