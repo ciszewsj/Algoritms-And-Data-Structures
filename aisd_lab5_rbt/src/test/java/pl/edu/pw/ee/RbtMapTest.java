@@ -50,7 +50,6 @@ public class RbtMapTest {
 		}
 		for (Datas.KeyIntValueString keyIntValueString : Datas.data_with_null) {
 			assertEquals(keyIntValueString.value, map.getValue(keyIntValueString.key));
-			System.out.println(map.getValue(keyIntValueString.key));
 		}
 	}
 

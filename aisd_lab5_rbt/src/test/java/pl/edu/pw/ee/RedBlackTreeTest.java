@@ -47,7 +47,7 @@ public class RedBlackTreeTest {
 			tree.put(keyIntValueString.key, keyIntValueString.value);
 		}
 		int i = data_1.length;
-		for (Datas.KeyIntValueString keyIntValueString : Datas.data_1) {
+		for (Datas.KeyIntValueString ignored1 : Datas.data_1) {
 			tree.deleteMax();
 			i -= 1;
 			for (int j = 0; j < i; j++) {
