@@ -10,8 +10,8 @@ import pl.edu.pw.ee.services.HashTable;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertNull;
-import static pl.edu.pw.ee.data.TestDatas.blankHashIdWord;
-import static pl.edu.pw.ee.data.TestDatas.minusHashIdWord;
+import static pl.edu.pw.ee.data.TestDatas.*;
+import static pl.edu.pw.ee.data.TestDatas.data4;
 
 public class HashLinearProbingTest {
 
@@ -330,6 +330,23 @@ public class HashLinearProbingTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void zero_hash_list_len() {
 		hashObject = new HashLinearProbing<String>(0);
+	}
+
+	@Test
+	public void delete_test_find_objects() {
+
+		hashObjectIInterface = new HashDoubleHashing<>();
+		for (String el : TestDatas.data4) {
+			hashObjectIInterface.put(el);
+		}
+
+		for (int i = 0; i < data4.length; i++) {
+			hashObjectIInterface.delete(data4[i]);
+			for (int j = i + 1; j < data4.length; j++) {
+				assertEquals(data4[j], hashObjectIInterface.get(data4[j]));
+			}
+		}
+
 	}
 
 }

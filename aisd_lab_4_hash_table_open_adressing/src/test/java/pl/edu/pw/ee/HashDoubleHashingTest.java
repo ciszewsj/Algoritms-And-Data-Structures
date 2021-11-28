@@ -331,9 +331,19 @@ public class HashDoubleHashingTest {
 	}
 
 	@Test
-	public void zero_hash_value_problem() {
-		hashObject = new HashDoubleHashing<String>(2048);
+	public void delete_test_find_objects() {
 
-		assertTrue(hashObject.hashFunc(notChangeHashDoubleHashing.hashCode(), 0) != hashObject.hashFunc(notChangeHashDoubleHashing.hashCode(), 1));
+		hashObjectIInterface = new HashDoubleHashing<>();
+		for (String el : TestDatas.data4) {
+			hashObjectIInterface.put(el);
+		}
+
+		for (int i = 0; i < data4.length; i++) {
+			hashObjectIInterface.delete(data4[i]);
+			for (int j = i + 1; j < data4.length; j++) {
+				assertEquals(data4[j], hashObjectIInterface.get(data4[j]));
+			}
+		}
+
 	}
 }
