@@ -25,9 +25,7 @@ public class HashQuadraticProbing<T extends Comparable<T>> extends HashOpenAdres
 	@Override
 	int hashFunc(int key, int i) {
 		int m = getSize();
-
-		int hash = (key % m + (int) a * i + (int) b * i * i) % m;
-
+		int hash = (int) (key % m + a * i + b * i * i) % m;
 		return hash < 0 ? -hash : hash;
 	}
 }

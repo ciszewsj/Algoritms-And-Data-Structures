@@ -2,15 +2,12 @@ package pl.edu.pw.ee;
 
 import org.junit.Before;
 import org.junit.Test;
-import pl.edu.pw.ee.HashDoubleHashing;
-import pl.edu.pw.ee.HashQuadraticProbing;
-import pl.edu.pw.ee.data.TestDatas;
+
 import pl.edu.pw.ee.services.HashTable;
 
-import java.lang.reflect.Field;
-
-import static org.junit.Assert.*;
-import static pl.edu.pw.ee.data.TestDatas.*;
+import static org.junit.Assert.assertTrue;
+import static pl.edu.pw.ee.data.TestDatas.blankHashIdWord;
+import static pl.edu.pw.ee.data.TestDatas.minusHashIdWord;
 
 public class HashDoubleHashingTest {
 
@@ -18,332 +15,128 @@ public class HashDoubleHashingTest {
 
 	HashDoubleHashing<String> hashObject;
 
+	UnifiedTests unifiedTests;
+
 	@Before
 	public void init() {
 		hashObjectIInterface = new HashDoubleHashing<>(1);
-		hashObject = new HashDoubleHashing<String>(1);
+		hashObject = new HashDoubleHashing<>(1);
+		unifiedTests = new UnifiedTests();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void should_ThrowException_WhenInitialSizeIsLowerThanOne() {
-		// given
+
 		int initialSize = 0;
 
-		// when
-		HashTable<Double> hash = new HashDoubleHashing<>(initialSize);
+		new HashDoubleHashing<>(initialSize);
 
-		// then
 		assert false;
 	}
 
 	@Test
 	public void should_CorrectlyAddNewElems_WhenNotExistInHashTable() {
-		// given
-		HashTable<String> emptyHash = new HashDoubleHashing<>();
-		String newEleme = "nothing special";
-
-		// when
-		int nOfElemsBeforePut = getNumOfElems(emptyHash);
-		emptyHash.put(newEleme);
-		int nOfElemsAfterPut = getNumOfElems(emptyHash);
-
-		// then
-		assertEquals(0, nOfElemsBeforePut);
-		assertEquals(1, nOfElemsAfterPut);
-	}
-
-	private int getNumOfElems(HashTable<?> hash) {
-		String fieldNumOfElems = "nElems";
-		try {
-			Field field = hash.getClass().getSuperclass().getDeclaredField(fieldNumOfElems);
-			field.setAccessible(true);
-
-			int numOfElems = field.getInt(hash);
-
-			return numOfElems;
-
-		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
+		unifiedTests.should_CorrectlyAddNewElems_WhenNotExistInHashTable(hashObjectIInterface);
 	}
 
 	@Test
 	public void input_test_1() {
-		for (String el : TestDatas.data1) {
-			hashObjectIInterface.put(el);
-
-			assertEquals(el, hashObjectIInterface.get(el));
-		}
+		unifiedTests.input_test_1(hashObjectIInterface);
 	}
 
 	@Test
 	public void input_test_2() {
-		for (String el : TestDatas.data2) {
-			hashObjectIInterface.put(el);
-
-			assertEquals(el, hashObjectIInterface.get(el));
-		}
+		unifiedTests.input_test_2(hashObjectIInterface);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void input_test_3() {
-		for (String el : TestDatas.data3) {
-			hashObjectIInterface.put(el);
-
-			assertEquals(el, hashObjectIInterface.get(el));
-		}
+		unifiedTests.input_test_3(hashObjectIInterface);
 	}
 
 	@Test
 	public void delete_test_1() {
-		for (String el : TestDatas.data1) {
-			hashObjectIInterface.put(el);
-
-			assertEquals(el, hashObjectIInterface.get(el));
-		}
-		for (String el : TestDatas.data1) {
-			assertEquals(el, hashObjectIInterface.get(el));
-			hashObjectIInterface.delete(el);
-
-			try {
-				assertNull(hashObjectIInterface.get(el));
-
-			} catch (IllegalStateException ignored) {
-
-			}
-		}
+		unifiedTests.delete_test_1(hashObjectIInterface);
 	}
 
 	@Test
 	public void delete_test_2() {
-		for (String el : TestDatas.data2) {
-			hashObjectIInterface.put(el);
-
-			assertEquals(el, hashObjectIInterface.get(el));
-		}
-		for (String el : TestDatas.data2) {
-			assertEquals(el, hashObjectIInterface.get(el));
-			hashObjectIInterface.delete(el);
-
-			try {
-				assertNull(hashObjectIInterface.get(el));
-
-			} catch (IllegalStateException ignored) {
-
-			}
-		}
+		unifiedTests.delete_test_2(hashObjectIInterface);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void delete_test_3() {
-		for (String el : TestDatas.data3) {
-			hashObjectIInterface.put(el);
 
-			assertEquals(el, hashObjectIInterface.get(el));
-		}
-		for (String el : TestDatas.data3) {
-			assertEquals(el, hashObjectIInterface.get(el));
-			hashObjectIInterface.delete(el);
+		unifiedTests.delete_test_3(hashObjectIInterface);
 
-			try {
-				assertNull(hashObjectIInterface.get(el));
-
-			} catch (IllegalStateException ignored) {
-
-			}
-		}
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void delete_test_not_element_in() {
-		for (String el : TestDatas.data2) {
-			try {
-				assertNull(hashObjectIInterface.get(el));
-
-			} catch (IllegalStateException ignored) {
-
-			}
-			hashObjectIInterface.put(el);
-
-			assertEquals(el, hashObjectIInterface.get(el));
-		}
-		hashObjectIInterface.delete(TestDatas.notInData2);
-
+		unifiedTests.delete_test_not_element_in(hashObjectIInterface);
 	}
-
 
 	@Test
 	public void countHashId_test_1() {
-
-		assertEquals(0, hashObject.countLoadFactor(), 0.0);
-
-		for (String el : TestDatas.data4) {
-			hashObject.put(el);
-
-		}
-		assertTrue(hashObject.countLoadFactor() > 0 && hashObject.countLoadFactor() <= 1);
-
-		for (String el : TestDatas.data4) {
-			hashObject.delete(el);
-
-		}
-		assertEquals(0, hashObject.countLoadFactor(), 0.0);
+		unifiedTests.countHashId_test_1(hashObjectIInterface);
 	}
 
 	@Test
 	public void countHashId_test_2() {
 
-		assertEquals(0, hashObject.countLoadFactor(), 0.0);
-
-		for (String el : TestDatas.data4) {
-			hashObject.put(el);
-			assertTrue(hashObject.countLoadFactor() > 0 && hashObject.countLoadFactor() <= 1);
-
-		}
-		for (String el : TestDatas.data4) {
-			assertTrue(hashObject.countLoadFactor() > 0 && hashObject.countLoadFactor() <= 1);
-			hashObject.delete(el);
-
-		}
-		assertEquals(0, hashObject.countLoadFactor(), 0.0);
+		unifiedTests.countHashId_test_2(hashObjectIInterface);
 	}
 
 	@Test
 	public void countHashId_test_3() {
 
-		assertEquals(0, hashObject.countLoadFactor(), 0.0);
-		for (String el : TestDatas.data4) {
-			hashObject.put(el);
-			assertTrue(hashObject.countLoadFactor() > 0 && hashObject.countLoadFactor() <= 1);
-
-		}
-
-
-		for (String el : TestDatas.data4) {
-			assertTrue(hashObject.countLoadFactor() > 0 && hashObject.countLoadFactor() <= 1);
-			hashObject.delete(el);
-
-		}
-		assertEquals(0, hashObject.countLoadFactor(), 0.0);
+		unifiedTests.countHashId_test_3(hashObjectIInterface);
 	}
 
 	@Test
 	public void interface_test_1() {
 
-		HashTable<String> hashTable = hashObjectIInterface;
-
-		for (String el : TestDatas.data4) {
-			try {
-				assertNull(hashObjectIInterface.get(el));
-
-			} catch (IllegalStateException ignored) {
-
-			}
-			hashTable.put(el);
-
-			assertEquals(el, hashTable.get(el));
-		}
+		unifiedTests.interface_test_1(hashObjectIInterface);
 	}
 
 	@Test
 	public void interface_test_2() {
 
-		HashTable<String> hashTable = hashObjectIInterface;
 
-
-		for (String el : TestDatas.data4) {
-			try {
-				assertNull(hashObjectIInterface.get(el));
-
-			} catch (IllegalStateException ignored) {
-
-			}
-			hashTable.put(el);
-
-			assertEquals(el, hashTable.get(el));
-		}
-		try {
-			assertNull(hashObjectIInterface.get("not_in_data_4"));
-
-		} catch (IllegalStateException ignored) {
-
-		}
-
-		for (String el : TestDatas.data4) {
-			assertEquals(el, hashTable.get(el));
-			hashTable.delete(el);
-
-			try {
-				assertNull(hashObjectIInterface.get(el));
-
-			} catch (IllegalStateException ignored) {
-
-			}
-		}
-
+		unifiedTests.interface_test_2(hashObjectIInterface);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void interface_test_3() {
 
-		HashTable<String> hashTable = hashObjectIInterface;
 
-		for (String el : TestDatas.data3) {
-			try {
-				assertNull(hashObjectIInterface.get(el));
-
-			} catch (IllegalStateException ignored) {
-
-			}
-			hashTable.put(el);
-
-			assertEquals(el, hashTable.get(el));
-		}
-		for (String el : TestDatas.data3) {
-			assertEquals(el, hashTable.get(el));
-			hashTable.delete(el);
-
-			try {
-				assertNull(hashObjectIInterface.get(el));
-
-			} catch (IllegalStateException ignored) {
-
-			}
-		}
+		unifiedTests.interface_test_3(hashObjectIInterface);
 	}
 
 	@Test
 	public void count_minus_hashid_problem_test() {
-		hashObject = new HashDoubleHashing<String>(1000);
+
+		hashObject = new HashDoubleHashing<>(1000);
 		assertTrue(hashObject.countHashId(minusHashIdWord.hashCode()) >= 0);
 		assertTrue(hashObject.countHashId(Integer.MIN_VALUE) >= 0);
 	}
 
 	@Test
 	public void count_blank_hashid_problem_test() {
-		hashObject = new HashDoubleHashing<String>(1000);
+
+		hashObject = new HashDoubleHashing<>(1000);
 		assertTrue(hashObject.countHashId(blankHashIdWord.hashCode()) >= 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void zero_hash_list_len() {
-		hashObject = new HashDoubleHashing<String>(0);
+
+		hashObject = new HashDoubleHashing<>(0);
 	}
 
 	@Test
 	public void delete_test_find_objects() {
 
-		hashObjectIInterface = new HashDoubleHashing<>();
-		for (String el : TestDatas.data4) {
-			hashObjectIInterface.put(el);
-		}
-
-		for (int i = 0; i < data4.length; i++) {
-			hashObjectIInterface.delete(data4[i]);
-			for (int j = i + 1; j < data4.length; j++) {
-				assertEquals(data4[j], hashObjectIInterface.get(data4[j]));
-			}
-		}
-
+		unifiedTests.delete_test_find_objects(hashObjectIInterface);
 	}
 }
