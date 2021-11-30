@@ -19,8 +19,8 @@ public class HashQuadraticProbingTest {
 
 	@Before
 	public void init() {
-		hashObjectIInterface = new HashQuadraticProbing<>(1);
-		hashObject = new HashQuadraticProbing<>(1);
+		hashObjectIInterface = new HashQuadraticProbing<>();
+		hashObject = new HashQuadraticProbing<>();
 		unifiedTests = new UnifiedTests();
 	}
 

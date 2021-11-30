@@ -19,8 +19,8 @@ public class HashLinearProbingTest {
 
 	@Before
 	public void init() {
-		hashObjectIInterface = new HashLinearProbing<>(1);
-		hashObject = new HashLinearProbing<>(1);
+		hashObjectIInterface = new HashLinearProbing<>();
+		hashObject = new HashLinearProbing<>();
 		unifiedTests = new UnifiedTests();
 	}
 

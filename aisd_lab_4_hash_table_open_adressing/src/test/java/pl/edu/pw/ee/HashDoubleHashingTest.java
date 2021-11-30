@@ -19,8 +19,8 @@ public class HashDoubleHashingTest {
 
 	@Before
 	public void init() {
-		hashObjectIInterface = new HashDoubleHashing<>(1);
-		hashObject = new HashDoubleHashing<>(1);
+		hashObjectIInterface = new HashDoubleHashing<>();
+		hashObject = new HashDoubleHashing<>();
 		unifiedTests = new UnifiedTests();
 	}
 
