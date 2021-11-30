@@ -6,7 +6,7 @@ public class RbtMap<K extends Comparable<K>, V> implements MapInterface<K, V> {
 
 	private final RedBlackTree<K, V> tree;
 
-	public <K, V> RbtMap() {
+	public RbtMap() {
 		tree = new RedBlackTree<>();
 	}
 

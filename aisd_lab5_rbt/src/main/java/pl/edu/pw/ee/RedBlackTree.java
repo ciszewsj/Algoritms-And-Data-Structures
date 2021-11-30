@@ -7,8 +7,8 @@ public class RedBlackTree<K extends Comparable<K>, V> {
 
 	private Node<K, V> root;
 
-	private final String notElementFound = "Not element with key in map";
-	private final String emptyListPrint = "Could not print empty map";
+	private static final String notElementFound = "Not element with key in map";
+	private static final String emptyListPrint = "Could not print empty map";
 
 	private int putMethodDeep;
 
@@ -178,13 +178,13 @@ public class RedBlackTree<K extends Comparable<K>, V> {
 
 	private String getPreOrder(Node<K, V> node) {
 		String text = "";
+		text = addStrings(text, node.toString());
 		if (node.getLeft() != null) {
 			text = addStrings(text, getPreOrder(node.getLeft()));
 		}
 		if (node.getRight() != null) {
 			text = addStrings(text, getPreOrder(node.getRight()));
 		}
-		text = addStrings(text, node.toString());
 		return text;
 	}
 
@@ -218,13 +218,13 @@ public class RedBlackTree<K extends Comparable<K>, V> {
 
 	private String getPostOrder(Node<K, V> node) {
 		String text = "";
-		text = addStrings(text, node.toString());
 		if (node.getLeft() != null) {
 			text = addStrings(text, getPostOrder(node.getLeft()));
 		}
 		if (node.getRight() != null) {
 			text = addStrings(text, getPostOrder(node.getRight()));
 		}
+		text = addStrings(text, node.toString());
 		return text;
 	}
 
@@ -243,7 +243,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
 			throw new IllegalStateException("Could not remove element. Map is empty");
 		}
 		root.setColor(RED);
-		root = deorganizeTree(root);
+		root = disorganizeTree(root);
 		root = removeMaxElement(root);
 		if (root != null) {
 			root = reorganizeTree(root);
@@ -259,27 +259,27 @@ public class RedBlackTree<K extends Comparable<K>, V> {
 		return node;
 	}
 
-	private Node<K, V> deorganizeTree(Node<K, V> node) {
+	private Node<K, V> disorganizeTree(Node<K, V> node) {
 		if (node.getLeft() == null && node.getRight() == null) {
 			return node;
 		}
 
 
-		node = unrotateLeftIfNeeded(node);
-		unchangeColorsIfNeeded(node);
+		node = unratedLeftIfNeeded(node);
+		unchangedColorsIfNeeded(node);
 
-		node.setRight(deorganizeTree(node.getRight()));
+		node.setRight(disorganizeTree(node.getRight()));
 		return node;
 	}
 
-	private Node<K, V> unrotateLeftIfNeeded(Node<K, V> node) {
+	private Node<K, V> unratedLeftIfNeeded(Node<K, V> node) {
 		if (isRed(node.getLeft()) && isBlack(node.getRight())) {
-			node = unrotateLeft(node);
+			node = unratedLeft(node);
 		}
 		return node;
 	}
 
-	private Node<K, V> unrotateLeft(Node<K, V> node) {
+	private Node<K, V> unratedLeft(Node<K, V> node) {
 		Node<K, V> head = node.getLeft();
 		node.setLeft(head.getRight());
 		head.setRight(node);
@@ -289,13 +289,13 @@ public class RedBlackTree<K extends Comparable<K>, V> {
 		return head;
 	}
 
-	private void unchangeColorsIfNeeded(Node<K, V> node) {
+	private void unchangedColorsIfNeeded(Node<K, V> node) {
 		if (isRed(node) && isBlack(node.getLeft()) && node.getLeft() != null && node.getRight() != null && isBlack(node.getRight())) {
-			unchangeColors(node);
+			unchangedColors(node);
 		}
 	}
 
-	private void unchangeColors(Node<K, V> node) {
+	private void unchangedColors(Node<K, V> node) {
 		node.setColor(BLACK);
 		node.getLeft().setColor(RED);
 		node.getRight().setColor(RED);

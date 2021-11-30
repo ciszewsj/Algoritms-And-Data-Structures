@@ -4,7 +4,7 @@ import static pl.edu.pw.ee.Color.RED;
 
 public class Node<K extends Comparable<K>, V> {
 
-	private K key;
+	private final K key;
 	private V value;
 	private Node<K, V> left, right;
 	private Color color;
