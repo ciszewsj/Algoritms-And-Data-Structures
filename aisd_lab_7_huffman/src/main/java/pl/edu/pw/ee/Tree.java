@@ -42,22 +42,22 @@ public class Tree<T extends Comparable<T>> implements Comparable<Tree<T>> {
 		char side = prefix.toCharArray()[0];
 		if (value != null) {
 			if (side == '0') {
-				if (left == null && newPrefix.length() == 0) {
+				if (left != null) {
+					left.insertTree(newPrefix, value);
+				} else if (newPrefix.length() > 0) {
 					left = new Tree<>();
 					left.insertTree(newPrefix, value);
-				} else if (left == null) {
+				} else {
 					left = new Tree<>(value);
-				} else if (newPrefix.length() == 0) {
-					throw new IllegalStateException("Prefixes are wrong");
 				}
 			} else if (side == bit1) {
-				if (right == null && newPrefix.length() == 0) {
+				if (right != null) {
+					right.insertTree(newPrefix, value);
+				} else if (newPrefix.length() > 0) {
 					right = new Tree<>();
 					right.insertTree(newPrefix, value);
-				} else if (right == null) {
+				} else {
 					right = new Tree<>(value);
-				} else if (newPrefix.length() == 0) {
-					throw new IllegalStateException("Prefixes are wrong");
 				}
 			} else {
 				throw new IllegalStateException("Prefixes are wrong");
