@@ -6,39 +6,62 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static pl.edu.pw.ee.StringAndByteOperation.*;
+
 public class Huffman {
 
-	private Map<String, Character> characterMap;
+	public static String path = System.getProperty("user.dir") + "\\src\\test\\java\\pl\\edu\\pw\\ee\\datas\\wynik.txt";
 
 	public int huffman(String pathToRootDir, boolean compress) throws FileNotFoundException {
 		String text;
-		try {
-			text = Files.readString(Paths.get(pathToRootDir));
-		} catch (IOException e) {
-			throw new FileNotFoundException();
-		}
+
 		if (compress) {
+			try {
+				text = Files.readString(Paths.get(pathToRootDir));
+			} catch (IOException e) {
+				throw new FileNotFoundException();
+			}
 			return compress(text).length();
 		}
-		return decompress(text).length();
+
+		try {
+			List<LeafDescription<Character>> leafDescriptionList = new ArrayList<>();
+			StringAndByteOperation.ReturnObject returnObject = readFile(path, leafDescriptionList);
+			Tree<Character> huffTree = new Tree<>(leafDescriptionList);
+			byte[] bytes = returnObject.getBytes();
+			return decompress(bytes, returnObject.getRead(), huffTree).length();
+		} catch (FileNotFoundException e) {
+			throw new FileNotFoundException();
+		}
 	}
 
 	private String compress(String text) {
-
-		Map<Character, String> characterMap = buildMap(text);
+		Tree<Character> huffTree = buildTree(text);
+		List<LeafDescription<Character>> listOfLeaf = huffTree.getIndexList();
 		StringBuilder result = new StringBuilder();
 		for (char c : text.toCharArray()) {
-			String code = characterMap.get(c);
+			String code = null;
+			for (LeafDescription<Character> leaf : listOfLeaf) {
+				if (leaf.getValue() == c) {
+					code = leaf.getPrefix();
+					break;
+				}
+			}
 			if (code == null) {
 				throw new IllegalStateException("Element not in generated map");
 			}
-			result.append(characterMap.get(c));
+			result.append(code);
 		}
-		saveInvertedMap(characterMap);
+		byte[] bytes = stringToBytes(result.toString());
+		try {
+			saveFile(System.getProperty("user.dir") + "\\src\\test\\java\\pl\\edu\\pw\\ee\\datas\\wynik.txt", huffTree, bytes, (byte) (result.toString().length() % length_byte));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		return result.toString();
 	}
 
-	private Map<Character, String> buildMap(String text) {
+	private Tree<Character> buildTree(String text) {
 		List<Tree<Character>> treeList = new ArrayList<>();
 		for (char c : text.toCharArray()) {
 			boolean isIn = false;
@@ -66,33 +89,23 @@ public class Huffman {
 			treeList.remove(min2);
 			treeList.add(new Tree<>(min1, min2));
 		}
-		return treeList.get(0).getIndexes();
+		return treeList.get(0);
 	}
 
-	private void saveInvertedMap(Map<Character, String> oldMap) {
-		this.characterMap = new HashMap<>();
-		for (Character key : oldMap.keySet()) {
-			this.characterMap.put(oldMap.get(key), key);
-		}
-
-	}
-
-	private String decompress(String text) {
-		if (characterMap == null) {
+	public String decompress(byte[] bytes, byte read, Tree<Character> huffTree) {
+		if (huffTree == null) {
 			throw new IllegalStateException("Character map is not init already");
 		}
+		String text = bytesToString(bytes, read);
 		StringBuilder decompressedText = new StringBuilder();
-
 		int index = 0;
-		for (int i = 0; i < text.length(); i++) {
+		for (int i = 0; i <= text.length(); i++) {
 			String prefix = text.substring(index, i);
-			if (characterMap.get(prefix) != null) {
-				decompressedText.append(characterMap.get(prefix));
+			if (huffTree.getCharByIndex(prefix) != null) {
+				decompressedText.append(huffTree.getCharByIndex(prefix));
 				index = i;
 			}
 		}
-
 		return decompressedText.toString();
 	}
-
 }
