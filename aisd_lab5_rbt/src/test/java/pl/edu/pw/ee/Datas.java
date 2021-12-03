@@ -26,6 +26,8 @@ public class Datas {
 			new KeyIntValueString(10, "j")
 	};
 
+	public static KeyIntValueString in_data_1_another_value = new KeyIntValueString(1, "abc");
+
 	public static String in_order_data_1 = "1:a 2:b 3:c 4:d 5:e 6:f 7:g 8:h 9:i 10:j";
 
 	public static String pre_order_data_1 = "4:d 2:b 1:a 3:c 8:h 6:f 5:e 7:g 10:j 9:i";

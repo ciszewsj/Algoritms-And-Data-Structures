@@ -73,9 +73,6 @@ public class RedBlackTree<K extends Comparable<K>, V> {
 		if (node == null) {
 			return new Node<>(key, value);
 		}
-		if (node.getKey().equals(key)) {
-			throw new IllegalStateException("Argument with this key is already in map");
-		}
 		if (isKeyBiggerThanNode(key, node)) {
 			putOnTheRight(node, key, value);
 
