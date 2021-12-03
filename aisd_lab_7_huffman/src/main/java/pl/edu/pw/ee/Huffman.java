@@ -13,17 +13,14 @@ public class Huffman {
 	public static String path = System.getProperty("user.dir") + "\\src\\test\\java\\pl\\edu\\pw\\ee\\datas\\wynik.txt";
 
 	public int huffman(String pathToRootDir, boolean compress) throws FileNotFoundException {
-		String text;
 
 		if (compress) {
 			try {
-				text = Files.readString(Paths.get(pathToRootDir));
+				return compress(Files.readString(Paths.get(pathToRootDir))).length();
 			} catch (IOException e) {
 				throw new FileNotFoundException();
 			}
-			return compress(text).length();
 		}
-
 		try {
 			List<LeafDescription<Character>> leafDescriptionList = new ArrayList<>();
 			StringAndByteOperation.ReturnObject returnObject = readFile(path, leafDescriptionList);
