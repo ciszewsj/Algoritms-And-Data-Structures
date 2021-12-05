@@ -119,5 +119,9 @@ public class StringAndByteOperation {
 		return result;
 	}
 
-
+	public static void saveFile(String path, String text) throws FileNotFoundException {
+		PrintWriter writer = new PrintWriter(path);
+		writer.print(text);
+		writer.close();
+	}
 }

@@ -115,6 +115,11 @@ public class Huffman {
 
 			}
 		}
+		try {
+			saveFile(path + decompressedFile, decompressedText.toString());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		return decompressedText.toString();
 	}
 }
