@@ -68,7 +68,7 @@ public class StringAndByteOperation {
 				a = a + "\n";
 			}
 			for (char c : a.toCharArray()) {
-				byteList.add((byte) c);
+				byteList.add((byte) ((int) (c) - 128));
 			}
 		}
 		byte[] bytes = new byte[byteList.size()];
@@ -81,7 +81,7 @@ public class StringAndByteOperation {
 	public static void saveFile(String path, byte[] bytes) throws FileNotFoundException {
 		PrintWriter writer = new PrintWriter(path);
 		for (byte b : bytes) {
-			writer.print((char) (b));
+			writer.print((char) ((int) b + 128));
 		}
 		writer.close();
 	}
