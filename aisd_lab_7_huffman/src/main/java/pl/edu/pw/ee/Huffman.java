@@ -19,6 +19,28 @@ public class Huffman {
 
 	public String decompressedFile = "decompressedFile.txt";
 
+
+	public Huffman() {
+
+	}
+
+	public Huffman(String path) {
+		this.path = path;
+	}
+
+	public Huffman(String keyFile, String compressedFile, String decompressedFile) {
+		this.keyFile = keyFile;
+		this.compressedFile = compressedFile;
+		this.decompressedFile = decompressedFile;
+	}
+
+	public Huffman(String path, String keyFile, String compressedFile, String decompressedFile) {
+		this.path = path;
+		this.keyFile = keyFile;
+		this.compressedFile = compressedFile;
+		this.decompressedFile = decompressedFile;
+	}
+
 	public int huffman(String pathToRootDir, boolean compress) throws FileNotFoundException {
 
 		if (compress) {
@@ -28,15 +50,20 @@ public class Huffman {
 				throw new FileNotFoundException();
 			}
 		}
+		HuffTree huffTree;
 		try {
-
-			HuffTree huffTree = generateHuffTreeFromString(bytesToString(readFile(path + keyFile), 8));
-			byte[] bytes = readFile(path + compressedFile);
-			return decompress(bytes, huffTree).length();
+			huffTree = generateHuffTreeFromString(bytesToString(readFile(pathToRootDir + keyFile)));
 		} catch (IOException e) {
-			throw new FileNotFoundException();
+			throw new FileNotFoundException(pathToRootDir + keyFile + " file with huffTree not found");
 		}
-//		return 0;
+		byte[] bytes;
+		try {
+			bytes = readFile(pathToRootDir + compressedFile);
+		} catch (IOException e) {
+			throw new FileNotFoundException(pathToRootDir + compressedFile + " file with code not found");
+		}
+		return decompress(bytes, huffTree).length();
+
 	}
 
 	private String compress(String text) {
@@ -56,10 +83,11 @@ public class Huffman {
 			}
 			result.append(code);
 		}
+
 		try {
-			saveFile(path + keyFile, stringToBytes(huffTree.treeToString()));
-			saveFile(path + compressedFile, stringToBytes(result.toString()));
-			System.out.println(result.toString());
+			String huffTreeString = huffTree.treeToString();
+			saveFile(path + keyFile, stringToBytes(huffTreeString), (byte) (huffTreeString.length() % 8));
+			saveFile(path + compressedFile, stringToBytes(result.toString()), (byte) (result.toString().length() % 8));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -98,12 +126,13 @@ public class Huffman {
 		return treeList.get(0);
 	}
 
-	public String decompress(byte[] bytes, HuffTree huffTree) {
+	private String decompress(byte[] bytes, HuffTree huffTree) {
 		if (huffTree == null) {
-			throw new IllegalStateException("Character map is not init already");
+			throw new IllegalStateException("huffTree");
+		} else if (bytes == null) {
+			throw new IllegalStateException("bytes array could not be null");
 		}
-		String text = bytesToString(bytes, 8);
-		System.out.println(text);
+		String text = bytesToString(bytes);
 		StringBuilder decompressedText = new StringBuilder();
 		int index = 0;
 		for (int i = 0; i <= text.length(); i++) {

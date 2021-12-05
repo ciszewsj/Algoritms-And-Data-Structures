@@ -17,25 +17,14 @@ public class HuffmanTest {
 	@Test
 	public void test() throws FileNotFoundException {
 		Huffman huffman = new Huffman();
-//		huffman.huffman(a, true);
-		//huffman.huffman(a, false);
-		//System.out.println(huffman.decompress(ac));
-//		System.out.println(huffman.huffman(a, true));
-		System.out.println(huffman.huffman(path + "niemanie.txt", true));
-		System.out.println(huffman.huffman(path + "niemanie.txt", false));
-//		huffman.decompress(ac);
+		huffman.huffman(path + "niemanie.txt", true);
+		System.out.println("123");
+		huffman.huffman(path, false);
 	}
 
 	@Test
 	public void a() {
 		Huffman huffman = new Huffman();
-//		byte a = 100;
-////		byte b = 121;
-//		for (int i = Byte.MIN_VALUE; i <= (int) Byte.MAX_VALUE; i += 1) {
-//			System.out.println(i + 128 + " -->> " + (char) (i + 128) + " - >>>" + (int) (char) (i + 128));
-//		}
-//		assertEquals(bytesToString(stringToBytes(bytesToString(new byte[]{a, b}, 5)), 5), bytesToString(new byte[]{a, b}, 5));
-//		assertArrayEquals(stringToBytes(bytesToString(new byte[]{a, b}, 5)), (new byte[]{a, b}));
 	}
 
 }

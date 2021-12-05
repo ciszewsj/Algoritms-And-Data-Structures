@@ -44,7 +44,11 @@ public class HuffTree implements Comparable<HuffTree> {
 		if (isLeaf) {
 			return bit1 + charToString(value);
 		}
-		return bit0 + left.generate() + right.generate();
+		if (right == null) {
+			return bit0 + left.generate();
+		} else {
+			return bit0 + left.generate() + right.generate();
+		}
 	}
 
 	public List<LeafDescription> getLeafDescriptionList() {
@@ -110,6 +114,9 @@ public class HuffTree implements Comparable<HuffTree> {
 	}
 
 	private String generateHuff(String huffInfo) {
+		if (Objects.equals(huffInfo, "")) {
+			return huffInfo;
+		}
 		char operation = huffInfo.charAt(0);
 		huffInfo = huffInfo.substring(1);
 		if (operation == bit0) {
@@ -130,7 +137,14 @@ public class HuffTree implements Comparable<HuffTree> {
 
 	public static HuffTree generateHuffTreeFromString(String huffInfo) {
 		HuffTree newHuffTree = new HuffTree();
-		newHuffTree.generateHuff(huffInfo);
+		try {
+			String returnString = newHuffTree.generateHuff(huffInfo);
+			if (returnString.length() > 0) {
+				throw new IllegalArgumentException("Wrong huffInfoFile");
+			}
+		} catch (IndexOutOfBoundsException e) {
+			throw new IllegalArgumentException("Wrong huffInfoFile");
+		}
 		return newHuffTree;
 	}
 }

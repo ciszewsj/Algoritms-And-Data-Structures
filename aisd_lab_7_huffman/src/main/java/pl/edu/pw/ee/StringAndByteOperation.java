@@ -16,9 +16,17 @@ public class StringAndByteOperation {
 	public static int min_chr = 0;
 	public static int max_chr = 255;
 
-	public static String bytesToString(byte[] bytes, int read) {
+	private static final int diff_chr = 128;
+
+	private static final String delimiter_value = "\n";
+
+	public static String bytesToString(byte[] bytes) {
+		byte read = (byte) ((int)bytes[0] - diff_chr);
+		if (read <= 0 || read > length_byte) {
+			throw new IllegalStateException("Problem with input file");
+		}
 		StringBuilder result = new StringBuilder();
-		for (int j = 0; j < bytes.length; j++) {
+		for (int j = 1; j < bytes.length; j++) {
 			for (int i = 0; i < (j + 1 != bytes.length ? length_byte : read); i++) {
 				result.append((bytes[j] >> (length_byte - (i + 1)) & 0x0001));
 			}
@@ -60,15 +68,15 @@ public class StringAndByteOperation {
 
 	public static byte[] readFile(String path) throws FileNotFoundException {
 		Scanner in = new Scanner(new File(path));
-		in.useDelimiter("\n");
+		in.useDelimiter(delimiter_value);
 		List<Byte> byteList = new ArrayList<>();
 		while (in.hasNext()) {
 			String a = in.next();
 			if (in.hasNextLine()) {
-				a = a + "\n";
+				a = a + delimiter_value;
 			}
 			for (char c : a.toCharArray()) {
-				byteList.add((byte) ((int) (c) - 128));
+				byteList.add((byte) ((int) (c) - diff_chr));
 			}
 		}
 		byte[] bytes = new byte[byteList.size()];
@@ -78,10 +86,14 @@ public class StringAndByteOperation {
 		return bytes;
 	}
 
-	public static void saveFile(String path, byte[] bytes) throws FileNotFoundException {
+	public static void saveFile(String path, byte[] bytes, byte lastBytesToRead) throws FileNotFoundException {
 		PrintWriter writer = new PrintWriter(path);
+		if (lastBytesToRead == 0) {
+			lastBytesToRead = length_byte;
+		}
+		writer.print((char) ((int) lastBytesToRead));
 		for (byte b : bytes) {
-			writer.print((char) ((int) b + 128));
+			writer.print((char) ((int) b + diff_chr));
 		}
 		writer.close();
 	}
@@ -97,7 +109,7 @@ public class StringAndByteOperation {
 
 	public static char stringToChar(String s) {
 		int result = convertStringToByte(s);
-		return (char) (result + 128);
+		return (char) (result + diff_chr);
 	}
 
 	private static int convertStringToByte(String s) {

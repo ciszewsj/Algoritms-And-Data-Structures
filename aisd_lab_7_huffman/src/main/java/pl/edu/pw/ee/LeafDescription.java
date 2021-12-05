@@ -16,9 +16,4 @@ public class LeafDescription {
 	public String getPrefix() {
 		return prefix;
 	}
-
-	@Override
-	public String toString() {
-		return value + " " + prefix;
-	}
 }
