@@ -60,11 +60,12 @@ public class StringAndByteOperation {
 
 	public static byte[] readFile(String path) throws FileNotFoundException {
 		Scanner in = new Scanner(new File(path));
+		in.useDelimiter("\n");
 		List<Byte> byteList = new ArrayList<>();
-		while (in.hasNextLine()) {
-			String a = in.nextLine();
+		while (in.hasNext()) {
+			String a = in.next();
 			if (in.hasNextLine()) {
-				a = a + (char) (13);
+				a = a + "\n";
 			}
 			for (char c : a.toCharArray()) {
 				byteList.add((byte) c);
