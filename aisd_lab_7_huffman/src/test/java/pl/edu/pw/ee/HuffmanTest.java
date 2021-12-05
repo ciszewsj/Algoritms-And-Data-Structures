@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.io.FileNotFoundException;
 
+import static pl.edu.pw.ee.HuffTree.generateHuffTreeFromString;
+
 public class HuffmanTest {
 	String a = "C:\\Study\\sem3.txt";
 	String b = "C:\\Study\\sem3kod.txt";
@@ -27,10 +29,13 @@ public class HuffmanTest {
 	@Test
 	public void a() {
 		Huffman huffman = new Huffman();
-		byte a = 100;
-		byte b = 121;
-
+//		byte a = 100;
+////		byte b = 121;
+//		for (int i = Byte.MIN_VALUE; i <= (int) Byte.MAX_VALUE; i += 1) {
+//			System.out.println(i + 128 + " -->> " + (char) (i + 128) + " - >>>" + (int) (char) (i + 128));
+//		}
 //		assertEquals(bytesToString(stringToBytes(bytesToString(new byte[]{a, b}, 5)), 5), bytesToString(new byte[]{a, b}, 5));
 //		assertArrayEquals(stringToBytes(bytesToString(new byte[]{a, b}, 5)), (new byte[]{a, b}));
 	}
+
 }

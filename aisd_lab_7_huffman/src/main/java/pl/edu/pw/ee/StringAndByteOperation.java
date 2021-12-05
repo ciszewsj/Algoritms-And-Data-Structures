@@ -13,6 +13,9 @@ public class StringAndByteOperation {
 	public static final char bit1 = '1';
 	public static final int length_byte = 8;
 
+	public static int min_chr = 0;
+	public static int max_chr = 255;
+
 	public static String bytesToString(byte[] bytes, int read) {
 		StringBuilder result = new StringBuilder();
 		for (int j = 0; j < bytes.length; j++) {
@@ -51,8 +54,54 @@ public class StringAndByteOperation {
 		if (bytes.length() > length_byte) {
 			throw new IllegalArgumentException("Length of input string is longer than 8");
 		}
-		byte result = 0;
-		char[] c = bytes.toCharArray();
+		int result = convertStringToByte(bytes);
+		return (byte) result;
+	}
+
+	public static byte[] readFile(String path) throws FileNotFoundException {
+		Scanner in = new Scanner(new File(path));
+		List<Byte> byteList = new ArrayList<>();
+		while (in.hasNextLine()) {
+			String a = in.nextLine();
+			if (in.hasNextLine()) {
+				a = a + (char) (13);
+			}
+			for (char c : a.toCharArray()) {
+				byteList.add((byte) c);
+			}
+		}
+		byte[] bytes = new byte[byteList.size()];
+		for (int i = 0; i < byteList.size(); i++) {
+			bytes[i] = byteList.get(i);
+		}
+		return bytes;
+	}
+
+	public static void saveFile(String path, byte[] bytes) throws FileNotFoundException {
+		PrintWriter writer = new PrintWriter(path);
+		for (byte b : bytes) {
+			writer.print((char) (b));
+		}
+		writer.close();
+	}
+
+	public static String charToString(char c) {
+		byte b = (byte) (((int) (c)) - 128);
+		StringBuilder result = new StringBuilder();
+		for (int i = 0; i < length_byte; i++) {
+			result.append((b >> (length_byte - (i + 1)) & 0x0001));
+		}
+		return result.toString();
+	}
+
+	public static char stringToChar(String s) {
+		int result = convertStringToByte(s);
+		return (char) (result + 128);
+	}
+
+	private static int convertStringToByte(String s) {
+		int result = 0;
+		char[] c = s.toCharArray();
 		for (int i = 0; i < length_byte; i++) {
 			try {
 				if (c[i] == bit0) {
@@ -69,66 +118,5 @@ public class StringAndByteOperation {
 		return result;
 	}
 
-	public static class ReturnObject {
-		private final byte read;
-		private final byte[] bytes;
 
-		public ReturnObject(byte read, byte[] bytes) {
-			this.read = read;
-			this.bytes = bytes;
-		}
-
-		public byte getRead() {
-			return read;
-		}
-
-		public byte[] getBytes() {
-			return bytes;
-		}
-	}
-
-	public static ReturnObject readFile(String path, List<LeafDescription<Character>> leaf) throws FileNotFoundException {
-		Scanner in = new Scanner(new File(path));
-		int nodes = in.nextInt();
-		in.nextLine();
-		for (int i = 0; i < nodes; i++) {
-			String key = in.nextLine();
-			try {
-				leaf.add(new LeafDescription<>(key.toCharArray()[0], key.substring(2)));
-			} catch (ArrayIndexOutOfBoundsException e) {
-				leaf.add(new LeafDescription<>('\n', in.next()));
-				in.nextLine();
-			}
-		}
-		byte t = in.nextByte();
-		in.nextLine();
-		List<Byte> byteList = new ArrayList<>();
-		while (in.hasNextLine()) {
-			String a = in.nextLine();
-			if (in.hasNextLine()) {
-				a = a + "\n";
-			}
-			for (char c : a.toCharArray()) {
-				byteList.add((byte) ((int) c));
-			}
-		}
-		byte[] bytes = new byte[byteList.size()];
-		for (int i = 0; i < byteList.size(); i++) {
-			bytes[i] = byteList.get(i);
-		}
-		return new ReturnObject(t, bytes);
-	}
-
-	public static void saveFile(String path, Tree<Character> leaf, byte[] bytes, byte read) throws FileNotFoundException {
-		PrintWriter writer = new PrintWriter(path);
-		writer.println(leaf.nOfElementsInTree());
-		for (LeafDescription<Character> c : leaf.getIndexList()) {
-			writer.println(c);
-		}
-		writer.println(read);
-		for (byte b : bytes) {
-			writer.print((char) (b));
-		}
-		writer.close();
-	}
 }

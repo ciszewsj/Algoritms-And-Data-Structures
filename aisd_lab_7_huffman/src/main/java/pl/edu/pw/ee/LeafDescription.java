@@ -1,15 +1,15 @@
 package pl.edu.pw.ee;
 
-public class LeafDescription<T extends Comparable<T>> {
-	private final T value;
+public class LeafDescription {
+	private final char value;
 	private final String prefix;
 
-	public LeafDescription(T value, String prefix) {
+	public LeafDescription(char value, String prefix) {
 		this.value = value;
 		this.prefix = prefix;
 	}
 
-	public T getValue() {
+	public char getValue() {
 		return value;
 	}
 
@@ -19,6 +19,6 @@ public class LeafDescription<T extends Comparable<T>> {
 
 	@Override
 	public String toString() {
-		return value.toString() + " " + prefix;
+		return value + " " + prefix;
 	}
 }
