@@ -145,6 +145,6 @@ public class StringAndByteOperation {
 		if (f.isDirectory() && !f.isFile()) {
 			return pathToRootDir;
 		}
-		throw new IllegalStateException("Path is not a directory or not exist");
+		throw new IllegalStateException("Path is not a directory or not exist : " + pathToRootDir);
 	}
 }

@@ -37,7 +37,11 @@ public class HuffTree implements Comparable<HuffTree> {
 	}
 
 	public String treeToString() {
-		return generate();
+		String generatedTreeString = generate();
+		if (generatedTreeString.charAt(0) == bit1) {
+			generatedTreeString = bit0 + generatedTreeString;
+		}
+		return generatedTreeString;
 	}
 
 	private String generate() {

@@ -3,6 +3,7 @@ package pl.edu.pw.ee;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -43,20 +44,22 @@ public class Huffman {
 		if (compress) {
 			try {
 				return compress(pathToRootDir, Files.readString(Paths.get(pathToRootDir + fileToCompress))).length();
-			} catch (IOException e) {
+			} catch (InvalidPathException | IOException e) {
 				throw new FileNotFoundException("Could not find file : " + pathToRootDir + fileToCompress);
 			}
 		}
 		HuffTree huffTree;
 		try {
 			huffTree = generateHuffTreeFromString(bytesToString(readFile(pathToRootDir + keyFile)));
-		} catch (IOException e) {
+		} catch (InvalidPathException | IOException e) {
 			throw new FileNotFoundException(pathToRootDir + keyFile + " file with huffTree not found");
+		} catch (IndexOutOfBoundsException e) {
+			throw new IllegalStateException("File is empty");
 		}
 		byte[] bytes;
 		try {
 			bytes = readFile(pathToRootDir + compressedFile);
-		} catch (IOException e) {
+		} catch (InvalidPathException | IOException e) {
 			throw new FileNotFoundException(pathToRootDir + compressedFile + " file with code not found");
 		}
 		return decompress(pathToRootDir, bytes, huffTree).length();
@@ -125,11 +128,16 @@ public class Huffman {
 
 	private String decompress(String path, byte[] bytes, HuffTree huffTree) {
 		if (huffTree == null) {
-			throw new IllegalStateException("huffTree");
+			throw new IllegalStateException("huffTree is null");
 		} else if (bytes == null) {
 			throw new IllegalStateException("bytes array could not be null");
 		}
-		String text = bytesToString(bytes);
+		String text;
+		try {
+			text = bytesToString(bytes);
+		} catch (IndexOutOfBoundsException e) {
+			throw new IllegalStateException("File is empty");
+		}
 		StringBuilder decompressedText = new StringBuilder();
 		int index = 0;
 		for (int i = 0; i <= text.length(); i++) {
@@ -140,6 +148,9 @@ public class Huffman {
 			} catch (IllegalStateException ignored) {
 
 			}
+		}
+		if (index != text.length()) {
+			throw new IllegalStateException("Could not decompressed File");
 		}
 		try {
 			saveFile(path + decompressedFile, decompressedText.toString());
