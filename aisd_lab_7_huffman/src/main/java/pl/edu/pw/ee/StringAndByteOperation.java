@@ -21,7 +21,7 @@ public class StringAndByteOperation {
 	private static final String delimiter_value = "\n";
 
 	public static String bytesToString(byte[] bytes) {
-		byte read = (byte) ((int)bytes[0] - diff_chr);
+		byte read = (byte) ((int) bytes[0] - diff_chr);
 		if (read <= 0 || read > length_byte) {
 			throw new IllegalStateException("Problem with input file");
 		}
@@ -135,5 +135,16 @@ public class StringAndByteOperation {
 		PrintWriter writer = new PrintWriter(path);
 		writer.print(text);
 		writer.close();
+	}
+
+	public static String validatePath(String pathToRootDir) {
+		if (pathToRootDir.charAt(pathToRootDir.length() - 1) != '\\') {
+			pathToRootDir += '\\';
+		}
+		File f = new File(pathToRootDir);
+		if (f.isDirectory() && !f.isFile()) {
+			return pathToRootDir;
+		}
+		throw new IllegalStateException("Path is not a directory or not exist");
 	}
 }
