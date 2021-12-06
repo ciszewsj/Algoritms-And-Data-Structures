@@ -11,6 +11,8 @@ public class HuffTree implements Comparable<HuffTree> {
 	private HuffTree left;
 	private HuffTree right;
 
+	private static final String wrongHuffInfoFile = "Wrong huffInfoFile";
+	private static final String notCharInTreeProblem = "Not char in tree";
 
 	public HuffTree(char value) {
 		this.value = value;
@@ -93,14 +95,14 @@ public class HuffTree implements Comparable<HuffTree> {
 			if (left != null) {
 				return left.charByIndex(index.substring(1));
 			}
-			throw new IllegalStateException("Not char in tree");
+			throw new IllegalStateException(notCharInTreeProblem);
 		} else if (prefix.equals(String.valueOf(bit1))) {
 			if (right != null) {
 				return right.charByIndex(index.substring(1));
 			}
-			throw new IllegalStateException("Not char in tree");
+			throw new IllegalStateException(notCharInTreeProblem);
 		}
-		throw new IllegalStateException("Not char in tree");
+		throw new IllegalStateException(notCharInTreeProblem);
 	}
 
 	public char getValue() {
@@ -144,10 +146,10 @@ public class HuffTree implements Comparable<HuffTree> {
 		try {
 			String returnString = newHuffTree.generateHuff(huffInfo);
 			if (returnString.length() > 0) {
-				throw new IllegalArgumentException("Wrong huffInfoFile");
+				throw new IllegalArgumentException(wrongHuffInfoFile);
 			}
 		} catch (IndexOutOfBoundsException | NullPointerException e) {
-			throw new IllegalArgumentException("Wrong huffInfoFile");
+			throw new IllegalArgumentException(wrongHuffInfoFile);
 		}
 		return newHuffTree;
 	}
