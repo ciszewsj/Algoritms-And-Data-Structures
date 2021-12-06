@@ -108,6 +108,9 @@ public class StringAndByteOperation {
 	}
 
 	public static char stringToChar(String s) {
+		if (s.length() != 8) {
+			throw new IllegalArgumentException("String should have 8 characters");
+		}
 		int result = convertStringToByte(s);
 		return (char) (result + diff_chr);
 	}

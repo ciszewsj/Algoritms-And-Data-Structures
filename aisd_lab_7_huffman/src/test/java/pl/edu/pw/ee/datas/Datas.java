@@ -29,4 +29,6 @@ public class Datas {
 	public static String wrong_file_to_decompress = "wrong_file_to_decompress";
 	public static String empty_key_file_test = "empty_key_file_test";
 	public static String empty_file_to_decompress = "empty_file_to_decompress";
+
+	public static byte[] bytes = new byte[]{123, 0, 31, -122, 127, -128, 0};
 }

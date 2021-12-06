@@ -146,7 +146,7 @@ public class HuffTree implements Comparable<HuffTree> {
 			if (returnString.length() > 0) {
 				throw new IllegalArgumentException("Wrong huffInfoFile");
 			}
-		} catch (IndexOutOfBoundsException e) {
+		} catch (IndexOutOfBoundsException | NullPointerException e) {
 			throw new IllegalArgumentException("Wrong huffInfoFile");
 		}
 		return newHuffTree;
