@@ -50,10 +50,12 @@ public class HuffTree implements Comparable<HuffTree> {
 		if (isLeaf) {
 			return bit1 + charToString(value);
 		}
-		if (right == null) {
+		if (right == null && left != null) {
 			return bit0 + left.generate();
-		} else {
+		} else if (left != null) {
 			return bit0 + left.generate() + right.generate();
+		} else {
+			return "";
 		}
 	}
 
