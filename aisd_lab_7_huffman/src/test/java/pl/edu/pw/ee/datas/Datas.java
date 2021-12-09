@@ -17,7 +17,7 @@ public class Datas {
 	public static String unargument_constructor = "unargument_constructor";
 
 	public static String full_arguments_constructor_dir = "full_arguments_constructor";
-	public static String full_arguments_constructor_file = "full_arguments_constructor.txt";
+	public static String full_arguments_constructor_file = "moj_stary_to_fanatyk_wedkarstwa.txt";
 	public static String full_arguments_constructor_compressed_file_name = "full_arguments_constructor_compressed.txt";
 	public static String full_arguments_constructor_uncompressed_file_name = "full_arguments_constructor_uncompressed.txt";
 	public static String full_arguments_constructor_key_file_name = "full_arguments_constructor_key.txt";

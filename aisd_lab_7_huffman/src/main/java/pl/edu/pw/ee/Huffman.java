@@ -88,7 +88,7 @@ public class Huffman {
 			String huffTreeString = huffTree.treeToString();
 			saveFile(path + keyFile, stringToBytes(huffTreeString), (byte) (huffTreeString.length() % 8));
 			saveFile(path + compressedFile, stringToBytes(result.toString()), (byte) (result.toString().length() % 8));
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			throw new IllegalStateException("Could not save file");
 		}
 		return result.toString();

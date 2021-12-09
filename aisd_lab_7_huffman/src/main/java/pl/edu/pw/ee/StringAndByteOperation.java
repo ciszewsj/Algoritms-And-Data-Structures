@@ -1,11 +1,7 @@
 package pl.edu.pw.ee;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.io.*;
+import java.util.Arrays;
 
 public class StringAndByteOperation {
 
@@ -14,14 +10,10 @@ public class StringAndByteOperation {
 	public static final int length_byte = 8;
 
 	public static int min_chr = 0;
-	public static int max_chr = 255;
-
-	private static final int diff_chr = 128;
-
-	private static final String delimiter_value = "\n";
+	public static int max_chr = 127;
 
 	public static String bytesToString(byte[] bytes) {
-		byte read = (byte) ((int) bytes[0] - diff_chr);
+		byte read = (byte) ((int) bytes[0]);
 		if (read <= 0 || read > length_byte) {
 			throw new IllegalStateException("Problem with input file");
 		}
@@ -66,40 +58,23 @@ public class StringAndByteOperation {
 		return (byte) result;
 	}
 
-	public static byte[] readFile(String path) throws FileNotFoundException {
-		Scanner in = new Scanner(new File(path));
-		in.useDelimiter(delimiter_value);
-		List<Byte> byteList = new ArrayList<>();
-		while (in.hasNext()) {
-			String a = in.next();
-			if (in.hasNextLine()) {
-				a = a + delimiter_value;
-			}
-			for (char c : a.toCharArray()) {
-				byteList.add((byte) ((int) (c) - diff_chr));
-			}
-		}
-		byte[] bytes = new byte[byteList.size()];
-		for (int i = 0; i < byteList.size(); i++) {
-			bytes[i] = byteList.get(i);
-		}
-		return bytes;
+	public static byte[] readFile(String path) throws IOException {
+		InputStream is = new FileInputStream(path);
+		return is.readAllBytes();
 	}
 
-	public static void saveFile(String path, byte[] bytes, byte lastBytesToRead) throws FileNotFoundException {
-		PrintWriter writer = new PrintWriter(path);
+	public static void saveFile(String path, byte[] bytes, byte lastBytesToRead) throws IOException {
 		if (lastBytesToRead == 0) {
-			lastBytesToRead = length_byte;
+			lastBytesToRead = 8;
 		}
-		writer.print((char) ((int) lastBytesToRead));
-		for (byte b : bytes) {
-			writer.print((char) ((int) b + diff_chr));
-		}
-		writer.close();
+		OutputStream os = new FileOutputStream(path);
+		os.write(lastBytesToRead);
+		os.write(bytes);
+		os.close();
 	}
 
 	public static String charToString(char c) {
-		byte b = (byte) (((int) (c)) - 128);
+		byte b = (byte) (((int) (c)));
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < length_byte; i++) {
 			result.append((b >> (length_byte - (i + 1)) & 0x0001));
@@ -112,7 +87,7 @@ public class StringAndByteOperation {
 			throw new IllegalArgumentException("String should have 8 characters");
 		}
 		int result = convertStringToByte(s);
-		return (char) (result + diff_chr);
+		return (char) (result);
 	}
 
 	private static int convertStringToByte(String s) {

@@ -49,7 +49,6 @@ public class HuffTreeTest {
 		huffTree = new HuffTree(c);
 		HuffTree newHuffTree = generateHuffTreeFromString(huffTree.treeToString());
 		assertEquals(c, newHuffTree.getCharByIndex("0"));
-		newHuffTree.treeToString();
 		assertEquals(huffTree.treeToString(), newHuffTree.treeToString());
 	}
 
