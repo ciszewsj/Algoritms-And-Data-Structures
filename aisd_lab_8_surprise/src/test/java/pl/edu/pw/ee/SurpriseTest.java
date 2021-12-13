@@ -14,6 +14,7 @@ public class SurpriseTest {
 	static int[] all_the_same_value = {1, 1, 1, 1, 1};
 
 	static int[] with_minus = {0, -1, -2, -3, -4, -5, -9, -8};
+	static int[] val = {3, -2, -1, -1, -1, -2, -4, -10, -10, -10, -8, 10, 3, -2, -1, -1, -1, -2, -4, -10, -10, -10, -8, 10};
 
 	@Before
 	public void init() {
@@ -43,6 +44,12 @@ public class SurpriseTest {
 	@Test(expected = IllegalStateException.class)
 	public void test_free_array() {
 		surprise.countMaxSumPoints(new int[]{});
+	}
+
+
+	@Test
+	public void test() {
+		System.out.println(surprise.countMaxSumPoints(val));
 	}
 
 }
