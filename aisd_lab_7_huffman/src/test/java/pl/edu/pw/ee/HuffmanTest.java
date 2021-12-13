@@ -105,4 +105,11 @@ public class HuffmanTest {
 		huffman = new Huffman();
 		huffman.huffman(path + empty_file_to_decompress, false);
 	}
+
+	@Test
+	public void dawid_test() throws FileNotFoundException {
+		huffman = new Huffman("dawid_test.txt");
+		huffman.huffman(path + "dawid_test", true);
+		huffman.huffman(path + "dawid_test", false);
+	}
 }
