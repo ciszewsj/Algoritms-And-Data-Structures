@@ -4,7 +4,6 @@ public class TabObject {
 	private int value;
 	private Site hasSite;
 
-
 	public enum Site {
 		LEFT, UP, SLANT
 	}

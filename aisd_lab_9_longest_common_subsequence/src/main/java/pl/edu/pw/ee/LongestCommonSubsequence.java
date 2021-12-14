@@ -8,14 +8,25 @@ class LongestCommonSubsequence {
 	private final char[] firstStr;
 	private final char[] secondStr;
 
-	private static final char hasLeftChar = '-';
-	private static final char hasUpChar = '|';
+	private static final char hasLeftChar = '<';
+	private static final char hasUpChar = '^';
 	private static final char hasSlantChar = '\\';
 
+	private static final String newLineDescription = "\\n";
+	private static final String carriageReturnDescription = "\\r";
+	private static final String tabDescription = "\\t";
+
 	public LongestCommonSubsequence(String firstStr, String secondStr) {
+		validateArguments(firstStr, secondStr);
 		this.firstStr = firstStr.toCharArray();
 		this.secondStr = secondStr.toCharArray();
 		buildCommonArray();
+	}
+
+	private void validateArguments(String firstStr, String secondStr) {
+		if (firstStr == null || secondStr == null) {
+			throw new NullPointerException("Strings could not be null");
+		}
 	}
 
 	private void buildCommonArray() {
@@ -65,33 +76,46 @@ class LongestCommonSubsequence {
 	}
 
 	public void display() {
+		System.out.println(this);
+	}
+
+	@Override
+	public String toString() {
 		StringBuilder toDisplay = new StringBuilder();
-		toDisplay.append("      ");
+		toDisplay.append("       ");
 		for (int i = 0; i < commonArray.length; i++) {
-			toDisplay.append(i - 1 < 0 ? "#" : secondStr[i - 1]);
-			toDisplay.append("     ");
+			toDisplay.append(String.format("%2s", i - 1 < 0 ? "#" : charToDescription(secondStr[i - 1])));
+			if (i + 1 < commonArray.length) {
+				toDisplay.append("     ");
+			}
 		}
+		toDisplay.append('\n');
 		for (int i = 0; i < commonArray[0].length; i++) {
-			if (i != 0) {
-				toDisplay.append('\n');
-			}
-			toDisplay.append(" ");
+			toDisplay.append("  ");
 			for (TabObject[] tabObjects : commonArray) {
-				toDisplay.append(String.format("  %c  %c", tabObjects[i].hasSite() == SLANT ? hasSlantChar : ' ', tabObjects[i].hasSite() == UP ? hasUpChar : ' '));
+				toDisplay.append(String.format("   %c  %c", tabObjects[i].hasSite() == SLANT ? hasSlantChar : ' ', tabObjects[i].hasSite() == UP ? hasUpChar : ' '));
 			}
 			toDisplay.append('\n');
 			toDisplay.append('\n');
-
-			toDisplay.append(i - 1 < 0 ? "#" : firstStr[i - 1]);
+			toDisplay.append(String.format("%2s", i - 1 < 0 ? "#" : charToDescription(firstStr[i - 1])));
 			for (TabObject[] tabObjects : commonArray) {
-
-				toDisplay.append(String.format("  %c  ", tabObjects[i].hasSite() == LEFT ? hasLeftChar : ' '));
+				toDisplay.append(String.format("  %2s  ", tabObjects[i].hasSite() == LEFT ? hasLeftChar : ' '));
 				toDisplay.append(tabObjects[i].getValue());
 			}
 			toDisplay.append("\n");
 		}
-
-		System.out.println(toDisplay);
+		return toDisplay.toString();
 	}
 
+	private String charToDescription(char c) {
+		if (c == '\r') {
+			return carriageReturnDescription;
+		} else if (c == '\n') {
+			return newLineDescription;
+		} else if (c == '\t') {
+			return tabDescription;
+		}
+
+		return String.valueOf(c);
+	}
 }
