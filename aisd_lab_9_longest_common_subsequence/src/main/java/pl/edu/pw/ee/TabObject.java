@@ -24,7 +24,7 @@ public class TabObject {
 		hasSite = site;
 	}
 
-	public Site hasSite() {
+	public Site getSite() {
 		return hasSite;
 	}
 }
