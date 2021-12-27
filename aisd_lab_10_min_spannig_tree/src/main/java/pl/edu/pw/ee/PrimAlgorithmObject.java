@@ -7,8 +7,8 @@ public class PrimAlgorithmObject<K, V extends Comparable<V>> implements Comparab
 	private final K vertex2;
 	private final V value;
 
-	private static final String signSeparator = "_";
-	private static final String lineSeparator = "\n";
+	public static final String signSeparator = "_";
+	public static final String lineSeparator = "|";
 
 
 	public PrimAlgorithmObject(K vertex1, K vertex2, V value) {
@@ -21,15 +21,17 @@ public class PrimAlgorithmObject<K, V extends Comparable<V>> implements Comparab
 	}
 
 	public boolean contain(K vertex) {
-		if (vertex.equals(vertex1) || vertex.equals(vertex2)) {
-			return true;
-		}
-		return false;
+		return vertex.equals(vertex1) || vertex.equals(vertex2);
 	}
 
 	@Override
 	public int compareTo(PrimAlgorithmObject<K, V> o) {
-		return -1 * this.value.compareTo(o.value);
+		if (this.value.compareTo(o.value) < 0) {
+			return 1;
+		} else if (this.value.compareTo(o.value) > 0) {
+			return -1;
+		}
+		return 0;
 	}
 
 	public K getVertex1() {
@@ -40,13 +42,9 @@ public class PrimAlgorithmObject<K, V extends Comparable<V>> implements Comparab
 		return vertex2;
 	}
 
-	public V getValue() {
-		return value;
-	}
-
 	@Override
 	public String toString() {
-		return vertex1 + signSeparator + value + signSeparator + vertex2 + lineSeparator;
+		return vertex1 + signSeparator + value + signSeparator + vertex2;
 
 	}
 }
