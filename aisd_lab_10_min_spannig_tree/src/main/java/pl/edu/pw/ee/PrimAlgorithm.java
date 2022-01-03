@@ -9,13 +9,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 import static pl.edu.pw.ee.PrimAlgorithmObject.lineSeparator;
 
 public class PrimAlgorithm implements MinSpanningTree {
 
-	private static final String incorrectDataError = "Incorrect data in File";
+	public static final String incorrectDataError = "Incorrect data in File";
 
 	public String findMST(String pathToFile) {
 		List<String> vertexMap = new ArrayList<>();
@@ -64,7 +65,7 @@ public class PrimAlgorithm implements MinSpanningTree {
 	}
 
 
-	private void readFile(String pathToFile, List<String> vertexMap, List<PrimAlgorithmObject<String, Integer>> primAlgorithmObjectList) {
+	public static void readFile(String pathToFile, List<String> vertexMap, List<PrimAlgorithmObject<String, Integer>> primAlgorithmObjectList) {
 		Scanner in;
 		try {
 			in = new Scanner(new File(pathToFile));
@@ -98,8 +99,11 @@ public class PrimAlgorithm implements MinSpanningTree {
 			if (value < 0) {
 				throw new IllegalArgumentException(incorrectDataError + " : Value could not be less than 0");
 			}
-			if (vertex1.equals(vertex2)){
+			if (vertex1.equals(vertex2)) {
 				throw new IllegalArgumentException(incorrectDataError + " : Path between the same vertex is illegal");
+			}
+			if (vertex1.equals("") || vertex2.equals("")) {
+				throw new IllegalArgumentException(incorrectDataError);
 			}
 			addValueToVertexMapIfNotIn(vertex1, vertexMap);
 			addValueToVertexMapIfNotIn(vertex2, vertexMap);
@@ -111,13 +115,13 @@ public class PrimAlgorithm implements MinSpanningTree {
 		}
 	}
 
-	private void addValueToVertexMapIfNotIn(String vertex, List<String> vertexMap) {
+	private static void addValueToVertexMapIfNotIn(String vertex, List<String> vertexMap) {
 		if (!vertexMap.contains(vertex)) {
 			vertexMap.add(vertex);
 		}
 	}
 
-	private static String addText(String first, String second) {
+	public static String addText(String first, String second) {
 		if (first == null || first.equals("")) {
 			return second;
 		}

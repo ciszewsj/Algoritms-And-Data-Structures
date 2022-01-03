@@ -25,6 +25,16 @@ public class Heap<T extends Comparable<T>> implements HeapInterface<T> {
 		return mem;
 	}
 
+	@Override
+	public boolean contain(T o) {
+		for (T i : heapList) {
+			if (i.equals(o)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private void change(int firstIndex) {
 
 		if (firstIndex >= 0) {
