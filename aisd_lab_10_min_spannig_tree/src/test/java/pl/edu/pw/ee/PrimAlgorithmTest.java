@@ -65,4 +65,9 @@ public class PrimAlgorithmTest {
 	public void minus_values_test() {
 		minSpanningTree.findMST(minus_values_file);
 	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void same_vertex_test() {
+		minSpanningTree.findMST(same_vertex_file);
+	}
 }

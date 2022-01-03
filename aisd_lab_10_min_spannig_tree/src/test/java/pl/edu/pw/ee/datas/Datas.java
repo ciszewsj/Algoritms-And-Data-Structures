@@ -27,5 +27,5 @@ public class Datas {
 
 	public static final String minus_values_file = path + "minus_values.txt";
 
-
+	public static final String same_vertex_file = path + "same_vertex_in_file.txt";
 }

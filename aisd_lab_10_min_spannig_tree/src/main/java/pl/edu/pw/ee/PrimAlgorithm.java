@@ -98,6 +98,9 @@ public class PrimAlgorithm implements MinSpanningTree {
 			if (value < 0) {
 				throw new IllegalArgumentException(incorrectDataError + " : Value could not be less than 0");
 			}
+			if (vertex1.equals(vertex2)){
+				throw new IllegalArgumentException(incorrectDataError + " : Path between the same vertex is illegal");
+			}
 			addValueToVertexMapIfNotIn(vertex1, vertexMap);
 			addValueToVertexMapIfNotIn(vertex2, vertexMap);
 			PrimAlgorithmObject<String, Integer> primAlgorithmObject = new PrimAlgorithmObject<>(vertex1, vertex2, value);
