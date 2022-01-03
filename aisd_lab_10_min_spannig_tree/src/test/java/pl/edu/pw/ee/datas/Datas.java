@@ -18,6 +18,7 @@ public class Datas {
 
 	public static final String lab_graph_file = path + "lab_graph.txt";
 	public static final String lab_graph_result = "A_2_E|A_4_H|A_5_C|B_6_H|B_7_D";
+	public static final String lab_graph_kruskal_result = "A_2_E|A_4_H|A_5_C|B_6_H|C_7_D";
 
 	public static final String to_few_argument_in_line_file = path + "to_few_argument_in_line.txt";
 

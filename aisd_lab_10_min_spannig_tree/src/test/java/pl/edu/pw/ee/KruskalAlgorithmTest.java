@@ -7,7 +7,7 @@ import pl.edu.pw.ee.services.MinSpanningTree;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static pl.edu.pw.ee.datas.Datas.*;
 
-public class KruskalAlghorithmTest {
+public class KruskalAlgorithmTest {
 	private MinSpanningTree minSpanningTree;
 
 	@Before
@@ -42,7 +42,7 @@ public class KruskalAlghorithmTest {
 
 	@Test
 	public void lab_graph_test() {
-		assertEquals(lab_graph_result, minSpanningTree.findMST(lab_graph_file));
+		assertEquals(lab_graph_kruskal_result, minSpanningTree.findMST(lab_graph_file));
 	}
 
 	@Test(expected = IllegalArgumentException.class)

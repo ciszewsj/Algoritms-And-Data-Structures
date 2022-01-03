@@ -25,12 +25,11 @@ public class KruskalAlgorithm implements MinSpanningTree {
 	}
 
 	private String findMST(List<String> vertexMap, HeapInterface<PrimAlgorithmObject<String, Integer>> priorityQueue) {
+		String first_elem = vertexMap.get(0);
 		List<PrimAlgorithmObject<String, Integer>> result = new ArrayList<>();
 		PrimAlgorithmObject<String, Integer> elem = priorityQueue.pop();
 		while (elem != null) {
-
 			addToList(elem, result, vertexMap);
-
 			try {
 				elem = priorityQueue.pop();
 			} catch (IllegalArgumentException e) {
@@ -39,6 +38,9 @@ public class KruskalAlgorithm implements MinSpanningTree {
 		}
 		String resultString = "";
 		for (PrimAlgorithmObject<String, Integer> primAlgorithmObject : result) {
+			if (!checkConnection(first_elem, new ArrayList<>(), primAlgorithmObject.getVertex2(), result)) {
+				throw new IllegalStateException("Could not find MST");
+			}
 			resultString = addText(resultString, primAlgorithmObject.toString());
 		}
 		return resultString;
@@ -49,31 +51,30 @@ public class KruskalAlgorithm implements MinSpanningTree {
 			result.add(primAlgorithmObject);
 			vertexMap.remove(primAlgorithmObject.getVertex1());
 			vertexMap.remove(primAlgorithmObject.getVertex2());
-		} else if (checkConnection(primAlgorithmObject, result)) {
+		} else if (!checkConnection(primAlgorithmObject, result)) {
 			result.add(primAlgorithmObject);
 		}
 	}
 
 	private boolean checkConnection(PrimAlgorithmObject<String, Integer> primAlgorithmObject, List<PrimAlgorithmObject<String, Integer>> result) {
-		return checkConnection(primAlgorithmObject.getVertex1(), "", primAlgorithmObject.getVertex2(), result);
+		List<String> wasIn = new ArrayList<>();
+		return checkConnection(primAlgorithmObject.getVertex1(), wasIn, primAlgorithmObject.getVertex2(), result);
 	}
 
-	private boolean checkConnection(String s, String c, String e, List<PrimAlgorithmObject<String, Integer>> result) {
-		if (s.equals(c)) {
-			return false;
-		} else if (c.equals(e)) {
+	private boolean checkConnection(String s, List<String> c, String e, List<PrimAlgorithmObject<String, Integer>> result) {
+		if (s.equals(e)) {
 			return true;
+		} else if (c.contains(s)) {
+			return false;
 		}
-		if (c.equals("")) {
-			c = s;
-		}
+		c.add(s);
 		for (PrimAlgorithmObject<String, Integer> primAlgorithmObject : result) {
-			if (primAlgorithmObject.getVertex2().equals(c)) {
-				if (checkConnection(s, primAlgorithmObject.getVertex1(), e, result)) {
+			if (primAlgorithmObject.getVertex2().equals(s)) {
+				if (checkConnection(primAlgorithmObject.getVertex1(), c, e, result)) {
 					return true;
 				}
-			} else {
-				if (checkConnection(s, primAlgorithmObject.getVertex2(), e, result)) {
+			} else if (primAlgorithmObject.getVertex1().equals(s)) {
+				if (checkConnection(primAlgorithmObject.getVertex2(), c, e, result)) {
 					return true;
 				}
 			}
