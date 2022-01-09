@@ -69,4 +69,9 @@ public class KruskalAlgorithmTest {
 	public void same_vertex_test() {
 		minSpanningTree.findMST(same_vertex_file);
 	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void empty_file_test() {
+		minSpanningTree.findMST(empty_file);
+	}
 }
