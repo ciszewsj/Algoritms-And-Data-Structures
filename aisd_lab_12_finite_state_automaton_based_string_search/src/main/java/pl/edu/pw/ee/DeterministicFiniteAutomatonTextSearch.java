@@ -9,9 +9,9 @@ import pl.edu.pw.ee.services.PatternSearch;
 
 public class DeterministicFiniteAutomatonTextSearch implements PatternSearch {
 
-	private class Key {
-		private int state;
-		private char sign;
+	private static class Key {
+		private final int state;
+		private final char sign;
 
 		public Key(int state, char sign) {
 			this.state = state;
@@ -35,7 +35,7 @@ public class DeterministicFiniteAutomatonTextSearch implements PatternSearch {
 		}
 	}
 
-	private String pattern;
+	private final String pattern;
 	private Map<Key, Integer> transMap;
 
 	public DeterministicFiniteAutomatonTextSearch(String pattern) {
@@ -67,7 +67,7 @@ public class DeterministicFiniteAutomatonTextSearch implements PatternSearch {
 		return results.stream().mapToInt(i -> i).toArray();
 	}
 
-	public int findFirstFrom(String text, int firstIndex) {
+	private int findFirstFrom(String text, int firstIndex) {
 		int result = -1;
 		int n = text.length();
 		int acceptedState = pattern.length();
@@ -89,7 +89,9 @@ public class DeterministicFiniteAutomatonTextSearch implements PatternSearch {
 
 	private void validateInput(String txt) {
 		if (txt == null) {
-			throw new IllegalArgumentException("Input text cannot be null!");
+			throw new IllegalArgumentException("I`nput text cannot be null!");
+		} else if (txt.equals("")) {
+			throw new IllegalArgumentException("Input text cannot be empty!");
 		}
 	}
 
@@ -114,12 +116,11 @@ public class DeterministicFiniteAutomatonTextSearch implements PatternSearch {
 	}
 
 	private List<Character> getAlphabetOfPattern() {
-		List<Character> signs = pattern.chars()
+
+		return pattern.chars()
 				.distinct()
 				.mapToObj(c -> (char) c)
 				.collect(toList());
-
-		return signs;
 	}
 
 	private boolean isSuffixOfPattern(int kIndex, int qIndex, char sign) {
