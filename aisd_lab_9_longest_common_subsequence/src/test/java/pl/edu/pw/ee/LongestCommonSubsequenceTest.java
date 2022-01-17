@@ -10,7 +10,7 @@ public class LongestCommonSubsequenceTest {
 	private void test_method_compare(String[] strings, String template1, String template2) {
 		LongestCommonSubsequence longestCommonSubsequence = new LongestCommonSubsequence(strings[0], strings[1]);
 		assertEquals(template1, longestCommonSubsequence.findLCS());
-
+		longestCommonSubsequence.display();
 		LongestCommonSubsequence longestCommonSubsequenceReverse = new LongestCommonSubsequence(strings[1], strings[0]);
 		assertEquals(template2, longestCommonSubsequenceReverse.findLCS());
 	}

@@ -112,4 +112,10 @@ public class HuffmanTest {
 		huffman.huffman(path + "dawid_test", true);
 		huffman.huffman(path + "dawid_test", false);
 	}
+
+	@Test
+	public void tesst() throws FileNotFoundException {
+		huffman = new Huffman("test.txt");
+		huffman.huffman(path + "test", false);
+	}
 }
